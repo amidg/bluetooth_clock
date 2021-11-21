@@ -1,0 +1,8 @@
+Change Component Comment : Designator=R14 Old Comment=1M 1% 0805 New Comment=0R 0805
+Change Component Comment : Designator=R19 Old Comment=1M 1% 0805 New Comment=370K 1% 0805
+Change Component Designator: OldDesignator=AUDIO_OUT1 NewDesignator=LEFT
+Change Component Designator: OldDesignator=AUDIO_OUT2 NewDesignator=RIGHT
+Change Net Name : Old Net Name=NetAUDIO_OUT1_1 New Net Name=NetC10_2
+Change Net Name : Old Net Name=NetAUDIO_OUT1_2 New Net Name=NetC11_2
+Change Net Name : Old Net Name=NetAUDIO_OUT2_1 New Net Name=NetC14_2
+Change Net Name : Old Net Name=NetAUDIO_OUT2_2 New Net Name=NetC15_2

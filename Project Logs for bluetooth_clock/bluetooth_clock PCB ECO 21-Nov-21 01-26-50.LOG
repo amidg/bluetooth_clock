@@ -1,0 +1,6 @@
+Removed Pin From Net: NetName=SD_MODE Pin=R19-1
+Removed Pin From Net: NetName=SD_MODE Pin=U4-4
+Change Net Name : Old Net Name=SD_MODE New Net Name=SD_MODE_LEFT
+Added Pin To Net: NetName=SD_MODE_RIGHT Pin=R19-1
+Added Pin To Net: NetName=SD_MODE_RIGHT Pin=U4-4
+Added Net: Name=SD_MODE_RIGHT
