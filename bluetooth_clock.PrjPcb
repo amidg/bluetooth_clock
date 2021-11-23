@@ -159,6 +159,10 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=WFQYLJLK
 
+[GeneratedDocument1]
+DocumentPath=Project Outputs for bluetooth_clock\Design Rule Check - bluetooth_clock.html
+DItemRevisionGUID=
+
 [Configuration1]
 Name=Sources
 ParameterCount=0

@@ -1,0 +1,694 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html">
+<style type="text/css">
+		h1, h2, h3, h4, h5, h6 {
+			font-family : segoe ui;
+			color : black;
+			background-color : #EDE7D9;
+			padding: 0.3em;
+		}
+
+		h1 {
+			font-size: 1.2em;
+		}		
+
+		h2 {
+			font-size: 1.2em;
+		}
+
+		body {
+			font-family : segoe ui;
+		}
+
+		td, th {
+			padding: 0.5em;
+			text-align : left;
+			width: 10em;
+		}
+		th {
+			background-color : #EEEEEE;
+
+		}
+		th.column1, td.column1 {
+			text-align: left;
+			width : auto;
+		}
+		table {
+			width : 100%;
+			font-size: 0.9em;
+		}
+
+		.DRC_summary_header {
+			padding-bottom : 0.1em;
+			border : 0px solid black;
+			width: 100%;
+			align: left;
+		}
+
+		.DRC_summary_header_col1,
+		.DRC_summary_header_col2, 
+		.DRC_summary_header_col3 {
+			color : black;
+			font-size:100%;
+			padding : 0em;
+			padding-top : 0.2em;
+			padding-bottom 0.2em;
+			border : 0px solid black;
+			vertical-align: top;
+			text-align: left;
+		}
+
+		.DRC_summary_header_col1 {
+			font-weight: bold;
+			width: 8em;
+		}
+
+		.DRC_summary_header_col2 {
+			width: 0.1em;
+		
+		}
+
+		.DRC_summary_header_col3 {
+			width : auto;
+		}
+
+		.header_holder {
+		    Width = 100%;
+		    border = 0px solid green;
+		    padding = 0;
+		}
+
+
+		.front_matter, .front_matter_column1, .front_matter_column2, .front_matter_column3
+		{
+			left : 0;
+			top : 0;
+			padding: 0em;
+			padding-top : 0.1em;
+			border : 0px solid black;
+			width : 100%;
+			vertical-align: top;
+			text-align: left;
+		}
+
+		.front_matter_column1 {
+			width : 8em;
+			font-weight: bold;
+		}
+
+		.front_matter_column2 {
+			width: 0.1em;
+		}
+
+		.front_matter_column3 {
+			width : auto;
+		}
+
+		.total_column1, .total_column {
+			font-weight : bold;
+		}
+		.total_column1 {
+			text-align : left;
+		}
+		.warning, .error {
+			color : red;
+			font-weight : bold;
+		}
+		tr.onmouseout_odd {
+			background-color : #white;
+		}
+		tr.onmouseout_even { 
+			background-color : #FAFAFA;
+		}
+		tr.onmouseover_odd, tr.onmouseover_even { 
+			background-color : #EEEEEE;
+		} 
+		a:link, a:visited, .q a:link,.q a:active,.q {
+			color: #21489e; 
+		}
+		a:link.callback, a:visited.callback { 
+			color: #21489e;
+		}
+		a:link.customize, a:visited.customize {
+			color: #C0C0C0;
+			position: absolute; 
+			right: 10px;
+		}	
+		p.contents_level1 {
+			font-weight : bold;
+			font-size : 110%;
+			margin : 0.5em;
+		}
+		p.contents_level2 {
+			position : relative;
+			left : 20px;
+			margin : 0.5em;
+		}
+	</style><script type="text/javascript">
+		function coordToMils(coord) {
+			var number = coord / 10000;
+			
+			if (number != number.toFixed(3))
+				number = number.toFixed(3);
+
+			return number + 'mil'
+		}
+
+		function coordToMM(coord) {
+			var number = 0.0254 * coord / 10000;
+			
+			if (number != number.toFixed(4))
+				number = number.toFixed(4);
+			
+			return number + 'mm'
+		}
+	
+		function convertCoord(coordNode, units) {
+			for (var i = 0; i < coordNode.childNodes.length; i++) {
+				coordNode.removeChild(coordNode.childNodes[i]);
+			}
+
+			var coord = coordNode.getAttribute('value');
+			if (coord != null) {
+				if (units == 'mm') {
+					textNode = document.createTextNode(coordToMM(coord));
+					coordNode.appendChild(textNode);
+				} else if (units == 'mil') {
+					textNode = document.createTextNode(coordToMils(coord));		
+					coordNode.appendChild(textNode);	
+				}
+			}
+		}
+	
+		function convertUnits(unitNode, units) {
+			for (var i = 0; i < unitNode.childNodes.length; i++) {
+				unitNode.removeChild(unitNode.childNodes[i]);		
+			}
+		
+			textNode = document.createTextNode(units); 
+			unitNode.appendChild(textNode);
+		}
+	
+		function changeUnits(radio_input, units) {
+			if (radio_input.checked) {
+			
+				var elements = document.getElementsByName('coordinate');
+				if (elements) {
+					for (var i = 0; i < elements.length; i++) {
+						convertCoord(elements[i], units);
+					}
+				}
+	
+				var elements = document.getElementsByName('units');
+				if (elements) {
+					for (var i = 0; i < elements.length; i++) {
+						convertUnits(elements[i], units);
+					}
+				}
+			}
+		}
+	</script><title>Design Rule Verification Report</title>
+</head>
+<body onload=""><img ALT="Altium" src="
+			file://E:\Altium\Shared\Templates\AD_logo.png
+		"><h1>Design Rule Verification Report</h1>
+<table class="header_holder">
+<td class="column1">
+<table class="front_matter">
+<tr class="front_matter">
+<td class="front_matter_column1">Date:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">22-Nov-21</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Time:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">20:49:43</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Elapsed Time:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3">00:00:02</td>
+</tr>
+<tr class="front_matter">
+<td class="front_matter_column1">Filename:</td>
+<td class="front_matter_column2"></td>
+<td class="front_matter_column3"><a href="file:///C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc" class="file"><acronym title="C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc">C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc</acronym></a></td>
+</tr>
+</table>
+</td>
+<td class="column2">
+<table class="DRC_summary_header">
+<tr>
+<td class="DRC_summary_header_col1">Warnings:</td>
+<td class="DRC_summary_header_col2"></td>
+<td class="DRC_summary_header_col3">0</td></tr>
+<tr>
+<td class="DRC_summary_header_col1">Rule Violations:</td>
+<td class="DRC_summary_header_col2"></td>
+<td class="DRC_summary_header_col3" style="color : red">118</td></tr>
+</table>
+</td>
+</table><a name="IDFAF3NUCOPF1KKE1TNXXDQ5LPAIHIOJ2CVDNLDOB2BSZFHGSCCP3L"><h2>Summary</h2></a><table>
+<tr>
+<th class="column1">Warnings</th>
+<th class="column2">Count</th>
+</tr>
+<tr>
+<td style="font-weight : bold; text-align : right" class="column1">Total</td>
+<td style="font-weight : bold" class="column2">0</td>
+</tr>
+</table><br><table>
+<tr>
+<th class="column1">Rule Violations</th>
+<th class="column2">Count</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDLYONPTFS5C2GDTJIO5I2LL2WXJ0OU4WIGNT1MEFBZN11N0KU0UQM">Clearance Constraint (Gap=0.254mm) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDBHAL3N2E0FXWPWOY1DGQRVSWTKF2IJFR01SO24G4QI5RAANJ351L">Short-Circuit Constraint (Allowed=No) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDZWZ3BGSDKUKRP5RJO5QGINI3SDT2AAXAPOX4QTPWRTWXJYW3XOXC">Un-Routed Net Constraint ( (All) )</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDPL3TU5LYCPGNLPPIKOQDY2WTXBB2WUYK34J5CALM00C44SK3KFAM">Modified Polygon (Allow modified: No), (Allow shelved: No)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDLQRLV413AAEZKKAVR244NM3PLHQ0VCP3YRIYBIFPBE3RUPYWODK">Width Constraint (Min=0.254mm) (Max=0.254mm) (Preferred=0.254mm) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDW1Z2FXGLUUTLMSIYSVJ2RZPREKC1GRA23TS5IHD41O51ZR5LS4C">Power Plane Connect Rule(Relief Connect )(Expansion=0.508mm) (Conductor Width=0.254mm) (Air Gap=0.254mm) (Entries=4) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDTWHOG3XZMOM5BJ35EMJSWFXQBLDG0IPEYX13WDHZTBLC0DOFPN4G">Hole Size Constraint (Min=0.025mm) (Max=2.54mm) (All)</a></td>
+<td class="column2">4</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#ID3PSNML1OGPABJOAVM2TCPMF4JEHJGRUXE5VPXDMA0HDSGA3XLDYC">Hole To Hole Clearance (Gap=0.254mm) (All),(All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDD5QTTYGST1MIH0MKYXGIVTEH1HK5AHBSRDD32SHRVKX1EJ21BOXL">Minimum Solder Mask Sliver (Gap=0.254mm) (All),(All)</a></td>
+<td class="column2">62</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDXPPKGPHSNUMRPAGOG5OFCFQAUEOO2B5FPQBVFFL1GMFIB1KTCEYJ">Silk To Solder Mask (Clearance=0.254mm) (IsPad),(All)</a></td>
+<td class="column2">50</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDOVFC4NR3ZZCXIXBCOQB2CRWRUIWGTKUALI3ZZSIWTSNXPTDX1NAB">Silk to Silk (Clearance=0.254mm) (All),(All)</a></td>
+<td class="column2">2</td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="#IDT1MAA0XDIYACBD4YPCFEKJTPECCLAJ5WDQ4DPCCS3G3JQPXDLJH">Net Antennae (Tolerance=0mm) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="#IDQOHFHR1DG13BFYKJVXO0PGTWFD5SA52K321SZLPRUX50FRTTGVEG">Height Constraint (Min=0mm) (Max=25.4mm) (Prefered=12.7mm) (All)</a></td>
+<td class="column2">0</td>
+</tr>
+<tr>
+<td style="font-weight : bold; text-align : right" class="column1">Total</td>
+<td style="font-weight : bold" class="column2">118</td>
+</tr>
+</table><br><a name="IDTWHOG3XZMOM5BJ35EMJSWFXQBLDG0IPEYX13WDHZTBLC0DOFPN4G"><table>
+<tr>
+<th style="text-align : left" colspan="1" class="rule">Hole Size Constraint (Min=0.025mm) (Max=2.54mm) (All)</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1087.958mil|Location2.X=1227.003mil|Location1.Y=2741.501mil|Location2.Y=2880.546mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1087.958mil|Location2.X=1227.003mil|Location1.Y=2741.501mil|Location2.Y=2880.546mil|Absolute=True">Hole Size Constraint: (3.5mm &gt; 2.54mm) Pad Free-2(4mm,46mm) on Multi-Layer Actual Hole Size = 3.5mm</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1087.958mil|Location2.X=1227.003mil|Location1.Y=1087.958mil|Location2.Y=1227.003mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1087.958mil|Location2.X=1227.003mil|Location1.Y=1087.958mil|Location2.Y=1227.003mil|Absolute=True">Hole Size Constraint: (3.5mm &gt; 2.54mm) Pad Free-2(4mm,4mm) on Multi-Layer Actual Hole Size = 3.5mm</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3922.603mil|Location2.X=4061.649mil|Location1.Y=2741.501mil|Location2.Y=2880.546mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3922.603mil|Location2.X=4061.649mil|Location1.Y=2741.501mil|Location2.Y=2880.546mil|Absolute=True">Hole Size Constraint: (3.5mm &gt; 2.54mm) Pad Free-2(76mm,46mm) on Multi-Layer Actual Hole Size = 3.5mm</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3922.603mil|Location2.X=4061.649mil|Location1.Y=1087.958mil|Location2.Y=1227.003mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3922.603mil|Location2.X=4061.649mil|Location1.Y=1087.958mil|Location2.Y=1227.003mil|Absolute=True">Hole Size Constraint: (3.5mm &gt; 2.54mm) Pad Free-2(76mm,4mm) on Multi-Layer Actual Hole Size = 3.5mm</acronym></a><br></td>
+</tr>
+</table></a><hr color="#EEEEEE"><a href="#top" style="font-size: 0.9em">Back to top</a><br><br><a name="IDD5QTTYGST1MIH0MKYXGIVTEH1HK5AHBSRDD32SHRVKX1EJ21BOXL"><table>
+<tr>
+<th style="text-align : left" colspan="1" class="rule">Minimum Solder Mask Sliver (Gap=0.254mm) (All),(All)</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3957.957mil|Location2.X=3969.207mil|Location1.Y=1458.021mil|Location2.Y=1469.271mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3957.957mil|Location2.X=3969.207mil|Location1.Y=1458.021mil|Location2.Y=1469.271mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.097mm &lt; 0.254mm) Between Pad C10-1(74.55mm,11mm) on Bottom Layer And Pad C10-2(76mm,11mm) on Bottom Layer [Bottom Solder] Mask Sliver [0.097mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3957.958mil|Location2.X=3969.208mil|Location1.Y=1772.981mil|Location2.Y=1784.231mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3957.958mil|Location2.X=3969.208mil|Location1.Y=1772.981mil|Location2.Y=1784.231mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.097mm &lt; 0.254mm) Between Pad C11-1(74.55mm,19mm) on Bottom Layer And Pad C11-2(76mm,19mm) on Bottom Layer [Bottom Solder] Mask Sliver [0.097mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1180.399mil|Location2.X=1191.649mil|Location1.Y=1711.832mil|Location2.Y=1723.082mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1180.399mil|Location2.X=1191.649mil|Location1.Y=1711.832mil|Location2.Y=1723.082mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.097mm &lt; 0.254mm) Between Pad C14-1(5.45mm,19mm) on Bottom Layer And Pad C14-2(4mm,19mm) on Bottom Layer [Bottom Solder] Mask Sliver [0.097mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1180.399mil|Location2.X=1191.649mil|Location1.Y=1396.871mil|Location2.Y=1408.121mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1180.399mil|Location2.X=1191.649mil|Location1.Y=1396.871mil|Location2.Y=1408.121mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.097mm &lt; 0.254mm) Between Pad C15-1(5.45mm,11mm) on Bottom Layer And Pad C15-2(4mm,11mm) on Bottom Layer [Bottom Solder] Mask Sliver [0.097mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2079.513mil|Location2.X=2090.763mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2079.513mil|Location2.X=2090.763mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.047mm &lt; 0.254mm) Between Pad microSD-1(28.113mm,1.588mm) on Top Layer And Pad microSD-2(27.013mm,1.588mm) on Top Layer [Top Solder] Mask Sliver [0.047mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1780.3mil|Location2.X=1791.55mil|Location1.Y=1031.222mil|Location2.Y=1042.472mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1780.3mil|Location2.X=1791.55mil|Location1.Y=1031.222mil|Location2.Y=1042.472mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.047mm &lt; 0.254mm) Between Pad microSD-12(19.253mm,1.938mm) on Top Layer And Pad microSD-8(20.463mm,1.588mm) on Top Layer [Top Solder] Mask Sliver [0.047mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2036.206mil|Location2.X=2047.456mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2036.206mil|Location2.X=2047.456mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.047mm &lt; 0.254mm) Between Pad microSD-2(27.013mm,1.588mm) on Top Layer And Pad microSD-3(25.913mm,1.588mm) on Top Layer [Top Solder] Mask Sliver [0.047mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1992.899mil|Location2.X=2004.149mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1992.899mil|Location2.X=2004.149mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.047mm &lt; 0.254mm) Between Pad microSD-3(25.913mm,1.588mm) on Top Layer And Pad microSD-4(24.813mm,1.588mm) on Top Layer [Top Solder] Mask Sliver [0.047mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1949.591mil|Location2.X=1960.841mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1949.591mil|Location2.X=1960.841mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.047mm &lt; 0.254mm) Between Pad microSD-4(24.813mm,1.588mm) on Top Layer And Pad microSD-5(23.713mm,1.588mm) on Top Layer [Top Solder] Mask Sliver [0.047mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1906.284mil|Location2.X=1917.534mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1906.284mil|Location2.X=1917.534mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.047mm &lt; 0.254mm) Between Pad microSD-5(23.713mm,1.588mm) on Top Layer And Pad microSD-6(22.613mm,1.588mm) on Top Layer [Top Solder] Mask Sliver [0.047mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1862.977mil|Location2.X=1874.227mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1862.977mil|Location2.X=1874.227mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.047mm &lt; 0.254mm) Between Pad microSD-6(22.613mm,1.588mm) on Top Layer And Pad microSD-7(21.513mm,1.588mm) on Top Layer [Top Solder] Mask Sliver [0.047mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1819.67mil|Location2.X=1830.92mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1819.67mil|Location2.X=1830.92mil|Location1.Y=1082.529mil|Location2.Y=1093.779mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.047mm &lt; 0.254mm) Between Pad microSD-7(21.513mm,1.588mm) on Top Layer And Pad microSD-8(20.463mm,1.588mm) on Top Layer [Top Solder] Mask Sliver [0.047mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2669.178mil|Location2.X=2680.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2669.178mil|Location2.X=2680.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-1(42.857mm,22.375mm) on Top Layer And Pad U1-2(42.222mm,22.375mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2469.178mil|Location2.X=2480.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2469.178mil|Location2.X=2480.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-10(37.142mm,22.375mm) on Top Layer And Pad U1-9(37.777mm,22.375mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2469.178mil|Location2.X=2480.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2469.178mil|Location2.X=2480.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-11(37.142mm,17.625mm) on Top Layer And Pad U1-12(37.777mm,17.625mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2494.178mil|Location2.X=2505.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2494.178mil|Location2.X=2505.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-12(37.777mm,17.625mm) on Top Layer And Pad U1-13(38.412mm,17.625mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2519.178mil|Location2.X=2530.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2519.178mil|Location2.X=2530.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-13(38.412mm,17.625mm) on Top Layer And Pad U1-14(39.047mm,17.625mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2544.178mil|Location2.X=2555.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2544.178mil|Location2.X=2555.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-14(39.047mm,17.625mm) on Top Layer And Pad U1-15(39.682mm,17.625mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2569.178mil|Location2.X=2580.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2569.178mil|Location2.X=2580.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-15(39.682mm,17.625mm) on Top Layer And Pad U1-16(40.317mm,17.625mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2594.178mil|Location2.X=2605.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2594.178mil|Location2.X=2605.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-16(40.317mm,17.625mm) on Top Layer And Pad U1-17(40.952mm,17.625mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2619.178mil|Location2.X=2630.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2619.178mil|Location2.X=2630.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-17(40.952mm,17.625mm) on Top Layer And Pad U1-18(41.587mm,17.625mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2644.178mil|Location2.X=2655.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2644.178mil|Location2.X=2655.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-18(41.587mm,17.625mm) on Top Layer And Pad U1-19(42.222mm,17.625mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2669.178mil|Location2.X=2680.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2669.178mil|Location2.X=2680.428mil|Location1.Y=1724.69mil|Location2.Y=1735.94mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-19(42.222mm,17.625mm) on Top Layer And Pad U1-20(42.857mm,17.625mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2644.178mil|Location2.X=2655.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2644.178mil|Location2.X=2655.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-2(42.222mm,22.375mm) on Top Layer And Pad U1-3(41.587mm,22.375mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2619.178mil|Location2.X=2630.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2619.178mil|Location2.X=2630.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-3(41.587mm,22.375mm) on Top Layer And Pad U1-4(40.952mm,22.375mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2594.178mil|Location2.X=2605.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2594.178mil|Location2.X=2605.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-4(40.952mm,22.375mm) on Top Layer And Pad U1-5(40.317mm,22.375mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2569.178mil|Location2.X=2580.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2569.178mil|Location2.X=2580.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-5(40.317mm,22.375mm) on Top Layer And Pad U1-6(39.682mm,22.375mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2544.178mil|Location2.X=2555.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2544.178mil|Location2.X=2555.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-6(39.682mm,22.375mm) on Top Layer And Pad U1-7(39.047mm,22.375mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2519.178mil|Location2.X=2530.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2519.178mil|Location2.X=2530.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-7(39.047mm,22.375mm) on Top Layer And Pad U1-8(38.412mm,22.375mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2494.178mil|Location2.X=2505.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2494.178mil|Location2.X=2505.428mil|Location1.Y=1911.698mil|Location2.Y=1922.948mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.235mm &lt; 0.254mm) Between Pad U1-8(38.412mm,22.375mm) on Top Layer And Pad U1-9(37.777mm,22.375mm) on Top Layer [Top Solder] Mask Sliver [0.235mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3515.536mil|Location2.X=3526.786mil|Location1.Y=1622.82mil|Location2.Y=1634.07mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3515.536mil|Location2.X=3526.786mil|Location1.Y=1622.82mil|Location2.Y=1634.07mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.177mm &lt; 0.254mm) Between Pad U3-1(63.575mm,15.75mm) on Top Layer And Pad U3-16(64.25mm,16.425mm) on Top Layer [Top Solder] Mask Sliver [0.177mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3481.58mil|Location2.X=3492.83mil|Location1.Y=1604.611mil|Location2.Y=1615.861mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3481.58mil|Location2.X=3492.83mil|Location1.Y=1604.611mil|Location2.Y=1615.861mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U3-1(63.575mm,15.75mm) on Top Layer And Pad U3-2(63.575mm,15.25mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3593.785mil|Location2.X=3605.035mil|Location1.Y=1584.926mil|Location2.Y=1596.176mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3593.785mil|Location2.X=3605.035mil|Location1.Y=1584.926mil|Location2.Y=1596.176mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U3-10(66.425mm,14.75mm) on Top Layer And Pad U3-11(66.425mm,15.25mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3593.785mil|Location2.X=3605.035mil|Location1.Y=1565.241mil|Location2.Y=1576.491mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3593.785mil|Location2.X=3605.035mil|Location1.Y=1565.241mil|Location2.Y=1576.491mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U3-10(66.425mm,14.75mm) on Top Layer And Pad U3-9(66.425mm,14.25mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3593.785mil|Location2.X=3605.035mil|Location1.Y=1604.611mil|Location2.Y=1615.861mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3593.785mil|Location2.X=3605.035mil|Location1.Y=1604.611mil|Location2.Y=1615.861mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U3-11(66.425mm,15.25mm) on Top Layer And Pad U3-12(66.425mm,15.75mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3591.324mil|Location2.X=3602.574mil|Location1.Y=1622.82mil|Location2.Y=1634.07mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3591.324mil|Location2.X=3602.574mil|Location1.Y=1622.82mil|Location2.Y=1634.07mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.177mm &lt; 0.254mm) Between Pad U3-12(66.425mm,15.75mm) on Top Layer And Pad U3-13(65.75mm,16.425mm) on Top Layer [Top Solder] Mask Sliver [0.177mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3573.115mil|Location2.X=3584.365mil|Location1.Y=1625.281mil|Location2.Y=1636.531mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3573.115mil|Location2.X=3584.365mil|Location1.Y=1625.281mil|Location2.Y=1636.531mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U3-13(65.75mm,16.425mm) on Top Layer And Pad U3-14(65.25mm,16.425mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3553.43mil|Location2.X=3564.68mil|Location1.Y=1625.281mil|Location2.Y=1636.531mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3553.43mil|Location2.X=3564.68mil|Location1.Y=1625.281mil|Location2.Y=1636.531mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U3-14(65.25mm,16.425mm) on Top Layer And Pad U3-15(64.75mm,16.425mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3533.745mil|Location2.X=3544.995mil|Location1.Y=1625.281mil|Location2.Y=1636.531mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3533.745mil|Location2.X=3544.995mil|Location1.Y=1625.281mil|Location2.Y=1636.531mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U3-15(64.75mm,16.425mm) on Top Layer And Pad U3-16(64.25mm,16.425mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3481.58mil|Location2.X=3492.83mil|Location1.Y=1584.926mil|Location2.Y=1596.176mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3481.58mil|Location2.X=3492.83mil|Location1.Y=1584.926mil|Location2.Y=1596.176mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U3-2(63.575mm,15.25mm) on Top Layer And Pad U3-3(63.575mm,14.75mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3481.58mil|Location2.X=3492.83mil|Location1.Y=1565.241mil|Location2.Y=1576.491mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3481.58mil|Location2.X=3492.83mil|Location1.Y=1565.241mil|Location2.Y=1576.491mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U3-3(63.575mm,14.75mm) on Top Layer And Pad U3-4(63.575mm,14.25mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3515.536mil|Location2.X=3526.786mil|Location1.Y=1547.032mil|Location2.Y=1558.282mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3515.536mil|Location2.X=3526.786mil|Location1.Y=1547.032mil|Location2.Y=1558.282mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.177mm &lt; 0.254mm) Between Pad U3-4(63.575mm,14.25mm) on Top Layer And Pad U3-5(64.25mm,13.575mm) on Top Layer [Top Solder] Mask Sliver [0.177mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3533.745mil|Location2.X=3544.995mil|Location1.Y=1544.572mil|Location2.Y=1555.822mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3533.745mil|Location2.X=3544.995mil|Location1.Y=1544.572mil|Location2.Y=1555.822mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U3-5(64.25mm,13.575mm) on Top Layer And Pad U3-6(64.75mm,13.575mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3553.43mil|Location2.X=3564.68mil|Location1.Y=1544.572mil|Location2.Y=1555.822mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3553.43mil|Location2.X=3564.68mil|Location1.Y=1544.572mil|Location2.Y=1555.822mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U3-6(64.75mm,13.575mm) on Top Layer And Pad U3-7(65.25mm,13.575mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3573.115mil|Location2.X=3584.365mil|Location1.Y=1544.572mil|Location2.Y=1555.822mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3573.115mil|Location2.X=3584.365mil|Location1.Y=1544.572mil|Location2.Y=1555.822mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U3-7(65.25mm,13.575mm) on Top Layer And Pad U3-8(65.75mm,13.575mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3591.324mil|Location2.X=3602.574mil|Location1.Y=1547.032mil|Location2.Y=1558.282mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3591.324mil|Location2.X=3602.574mil|Location1.Y=1547.032mil|Location2.Y=1558.282mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.177mm &lt; 0.254mm) Between Pad U3-8(65.75mm,13.575mm) on Top Layer And Pad U3-9(66.425mm,14.25mm) on Top Layer [Top Solder] Mask Sliver [0.177mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1622.82mil|Location2.X=1634.07mil|Location1.Y=1547.032mil|Location2.Y=1558.282mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1622.82mil|Location2.X=1634.07mil|Location1.Y=1547.032mil|Location2.Y=1558.282mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.177mm &lt; 0.254mm) Between Pad U4-1(16.425mm,14.25mm) on Top Layer And Pad U4-16(15.75mm,13.575mm) on Top Layer [Top Solder] Mask Sliver [0.177mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1656.777mil|Location2.X=1668.027mil|Location1.Y=1565.241mil|Location2.Y=1576.491mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1656.777mil|Location2.X=1668.027mil|Location1.Y=1565.241mil|Location2.Y=1576.491mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U4-1(16.425mm,14.25mm) on Top Layer And Pad U4-2(16.425mm,14.75mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1544.572mil|Location2.X=1555.822mil|Location1.Y=1584.926mil|Location2.Y=1596.176mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1544.572mil|Location2.X=1555.822mil|Location1.Y=1584.926mil|Location2.Y=1596.176mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U4-10(13.575mm,15.25mm) on Top Layer And Pad U4-11(13.575mm,14.75mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1544.572mil|Location2.X=1555.822mil|Location1.Y=1604.611mil|Location2.Y=1615.861mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1544.572mil|Location2.X=1555.822mil|Location1.Y=1604.611mil|Location2.Y=1615.861mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U4-10(13.575mm,15.25mm) on Top Layer And Pad U4-9(13.575mm,15.75mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1544.572mil|Location2.X=1555.822mil|Location1.Y=1565.241mil|Location2.Y=1576.491mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1544.572mil|Location2.X=1555.822mil|Location1.Y=1565.241mil|Location2.Y=1576.491mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U4-11(13.575mm,14.75mm) on Top Layer And Pad U4-12(13.575mm,14.25mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1547.032mil|Location2.X=1558.282mil|Location1.Y=1547.032mil|Location2.Y=1558.282mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1547.032mil|Location2.X=1558.282mil|Location1.Y=1547.032mil|Location2.Y=1558.282mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.177mm &lt; 0.254mm) Between Pad U4-12(13.575mm,14.25mm) on Top Layer And Pad U4-13(14.25mm,13.575mm) on Top Layer [Top Solder] Mask Sliver [0.177mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1565.241mil|Location2.X=1576.491mil|Location1.Y=1544.572mil|Location2.Y=1555.822mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1565.241mil|Location2.X=1576.491mil|Location1.Y=1544.572mil|Location2.Y=1555.822mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U4-13(14.25mm,13.575mm) on Top Layer And Pad U4-14(14.75mm,13.575mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1584.926mil|Location2.X=1596.176mil|Location1.Y=1544.572mil|Location2.Y=1555.822mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1584.926mil|Location2.X=1596.176mil|Location1.Y=1544.572mil|Location2.Y=1555.822mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U4-14(14.75mm,13.575mm) on Top Layer And Pad U4-15(15.25mm,13.575mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1604.611mil|Location2.X=1615.861mil|Location1.Y=1544.572mil|Location2.Y=1555.822mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1604.611mil|Location2.X=1615.861mil|Location1.Y=1544.572mil|Location2.Y=1555.822mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U4-15(15.25mm,13.575mm) on Top Layer And Pad U4-16(15.75mm,13.575mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1656.777mil|Location2.X=1668.027mil|Location1.Y=1584.926mil|Location2.Y=1596.176mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1656.777mil|Location2.X=1668.027mil|Location1.Y=1584.926mil|Location2.Y=1596.176mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U4-2(16.425mm,14.75mm) on Top Layer And Pad U4-3(16.425mm,15.25mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1656.777mil|Location2.X=1668.027mil|Location1.Y=1604.611mil|Location2.Y=1615.861mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1656.777mil|Location2.X=1668.027mil|Location1.Y=1604.611mil|Location2.Y=1615.861mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U4-3(16.425mm,15.25mm) on Top Layer And Pad U4-4(16.425mm,15.75mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1622.82mil|Location2.X=1634.07mil|Location1.Y=1622.82mil|Location2.Y=1634.07mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1622.82mil|Location2.X=1634.07mil|Location1.Y=1622.82mil|Location2.Y=1634.07mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.177mm &lt; 0.254mm) Between Pad U4-4(16.425mm,15.75mm) on Top Layer And Pad U4-5(15.75mm,16.425mm) on Top Layer [Top Solder] Mask Sliver [0.177mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1604.611mil|Location2.X=1615.861mil|Location1.Y=1625.281mil|Location2.Y=1636.531mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1604.611mil|Location2.X=1615.861mil|Location1.Y=1625.281mil|Location2.Y=1636.531mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U4-5(15.75mm,16.425mm) on Top Layer And Pad U4-6(15.25mm,16.425mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1584.926mil|Location2.X=1596.176mil|Location1.Y=1625.281mil|Location2.Y=1636.531mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1584.926mil|Location2.X=1596.176mil|Location1.Y=1625.281mil|Location2.Y=1636.531mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U4-6(15.25mm,16.425mm) on Top Layer And Pad U4-7(14.75mm,16.425mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1565.241mil|Location2.X=1576.491mil|Location1.Y=1625.281mil|Location2.Y=1636.531mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1565.241mil|Location2.X=1576.491mil|Location1.Y=1625.281mil|Location2.Y=1636.531mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.2mm &lt; 0.254mm) Between Pad U4-7(14.75mm,16.425mm) on Top Layer And Pad U4-8(14.25mm,16.425mm) on Top Layer [Top Solder] Mask Sliver [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1547.032mil|Location2.X=1558.282mil|Location1.Y=1622.82mil|Location2.Y=1634.07mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1547.032mil|Location2.X=1558.282mil|Location1.Y=1622.82mil|Location2.Y=1634.07mil|Absolute=True">Minimum Solder Mask Sliver Constraint: (0.177mm &lt; 0.254mm) Between Pad U4-8(14.25mm,16.425mm) on Top Layer And Pad U4-9(13.575mm,15.75mm) on Top Layer [Top Solder] Mask Sliver [0.177mm]</acronym></a><br></td>
+</tr>
+</table></a><hr color="#EEEEEE"><a href="#top" style="font-size: 0.9em">Back to top</a><br><br><a name="IDXPPKGPHSNUMRPAGOG5OFCFQAUEOO2B5FPQBVFFL1GMFIB1KTCEYJ"><table>
+<tr>
+<th style="text-align : left" colspan="1" class="rule">Silk To Solder Mask (Clearance=0.254mm) (IsPad),(All)</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.989mil|Location2.X=3592.239mil|Location1.Y=1244.375mil|Location2.Y=1255.625mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.989mil|Location2.X=3592.239mil|Location1.Y=1244.375mil|Location2.Y=1255.625mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad 3V3-1(66.5mm,7mm) on Top Layer And Track (64.4mm,6.35mm)(65.5mm,6.35mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.989mil|Location2.X=3592.239mil|Location1.Y=1295.556mil|Location2.Y=1306.806mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.989mil|Location2.X=3592.239mil|Location1.Y=1295.556mil|Location2.Y=1306.806mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad 3V3-1(66.5mm,7mm) on Top Layer And Track (64.4mm,7.65mm)(65.5mm,7.65mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.989mil|Location2.X=3592.239mil|Location1.Y=1244.375mil|Location2.Y=1255.625mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.989mil|Location2.X=3592.239mil|Location1.Y=1244.375mil|Location2.Y=1255.625mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad 3V3-1(66.5mm,7mm) on Top Layer And Track (65.5mm,6.35mm)(65.5mm,7.65mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3523.903mil|Location2.X=3535.153mil|Location1.Y=1244.375mil|Location2.Y=1255.625mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3523.903mil|Location2.X=3535.153mil|Location1.Y=1244.375mil|Location2.Y=1255.625mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.1mm &lt; 0.254mm) Between Pad 3V3-2(63.5mm,7mm) on Top Layer And Track (64.4mm,6.35mm)(65.5mm,6.35mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.1mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3523.903mil|Location2.X=3535.153mil|Location1.Y=1295.556mil|Location2.Y=1306.806mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3523.903mil|Location2.X=3535.153mil|Location1.Y=1295.556mil|Location2.Y=1306.806mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.1mm &lt; 0.254mm) Between Pad 3V3-2(63.5mm,7mm) on Top Layer And Track (64.4mm,7.65mm)(65.5mm,7.65mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.1mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.989mil|Location2.X=3592.239mil|Location1.Y=1126.265mil|Location2.Y=1137.515mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.989mil|Location2.X=3592.239mil|Location1.Y=1126.265mil|Location2.Y=1137.515mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad 5V-1(66.5mm,4mm) on Top Layer And Track (64.4mm,3.35mm)(65.5mm,3.35mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.989mil|Location2.X=3592.239mil|Location1.Y=1177.446mil|Location2.Y=1188.696mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.989mil|Location2.X=3592.239mil|Location1.Y=1177.446mil|Location2.Y=1188.696mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad 5V-1(66.5mm,4mm) on Top Layer And Track (64.4mm,4.65mm)(65.5mm,4.65mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.989mil|Location2.X=3592.239mil|Location1.Y=1126.265mil|Location2.Y=1137.515mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3580.989mil|Location2.X=3592.239mil|Location1.Y=1126.265mil|Location2.Y=1137.515mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad 5V-1(66.5mm,4mm) on Top Layer And Track (65.5mm,3.35mm)(65.5mm,4.65mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3523.903mil|Location2.X=3535.153mil|Location1.Y=1126.265mil|Location2.Y=1137.515mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3523.903mil|Location2.X=3535.153mil|Location1.Y=1126.265mil|Location2.Y=1137.515mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.1mm &lt; 0.254mm) Between Pad 5V-2(63.5mm,4mm) on Top Layer And Track (64.4mm,3.35mm)(65.5mm,3.35mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.1mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3523.903mil|Location2.X=3535.153mil|Location1.Y=1177.446mil|Location2.Y=1188.696mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3523.903mil|Location2.X=3535.153mil|Location1.Y=1177.446mil|Location2.Y=1188.696mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.1mm &lt; 0.254mm) Between Pad 5V-2(63.5mm,4mm) on Top Layer And Track (64.4mm,4.65mm)(65.5mm,4.65mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.1mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3021.934mil|Location2.X=3033.184mil|Location1.Y=2357.564mil|Location2.Y=2368.814mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3021.934mil|Location2.X=3033.184mil|Location1.Y=2357.564mil|Location2.Y=2368.814mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad ESP32-RX-1(52mm,33.95mm) on Top Layer And Track (51.5mm,34.85mm)(51.5mm,35.15mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3021.934mil|Location2.X=3033.184mil|Location1.Y=2357.564mil|Location2.Y=2368.814mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3021.934mil|Location2.X=3033.184mil|Location1.Y=2357.564mil|Location2.Y=2368.814mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad ESP32-RX-1(52mm,33.95mm) on Top Layer And Track (51.5mm,34.85mm)(52.5mm,34.85mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3061.304mil|Location2.X=3072.554mil|Location1.Y=2357.564mil|Location2.Y=2368.814mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3061.304mil|Location2.X=3072.554mil|Location1.Y=2357.564mil|Location2.Y=2368.814mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad ESP32-RX-1(52mm,33.95mm) on Top Layer And Track (52.5mm,34.85mm)(52.5mm,35.15mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3021.934mil|Location2.X=3033.184mil|Location1.Y=2387.091mil|Location2.Y=2398.341mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3021.934mil|Location2.X=3033.184mil|Location1.Y=2387.091mil|Location2.Y=2398.341mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad ESP32-RX-2(52mm,36.05mm) on Top Layer And Track (51.5mm,34.85mm)(51.5mm,35.15mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3061.304mil|Location2.X=3072.554mil|Location1.Y=2387.091mil|Location2.Y=2398.341mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3061.304mil|Location2.X=3072.554mil|Location1.Y=2387.091mil|Location2.Y=2398.341mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad ESP32-RX-2(52mm,36.05mm) on Top Layer And Track (52.5mm,34.85mm)(52.5mm,35.15mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2884.139mil|Location2.X=2895.389mil|Location1.Y=2357.564mil|Location2.Y=2368.814mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2884.139mil|Location2.X=2895.389mil|Location1.Y=2357.564mil|Location2.Y=2368.814mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad ESP32-TX-1(48.5mm,33.95mm) on Top Layer And Track (48mm,34.85mm)(48mm,35.15mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2884.139mil|Location2.X=2895.389mil|Location1.Y=2357.564mil|Location2.Y=2368.814mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2884.139mil|Location2.X=2895.389mil|Location1.Y=2357.564mil|Location2.Y=2368.814mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad ESP32-TX-1(48.5mm,33.95mm) on Top Layer And Track (48mm,34.85mm)(49mm,34.85mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2923.509mil|Location2.X=2934.759mil|Location1.Y=2357.564mil|Location2.Y=2368.814mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2923.509mil|Location2.X=2934.759mil|Location1.Y=2357.564mil|Location2.Y=2368.814mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad ESP32-TX-1(48.5mm,33.95mm) on Top Layer And Track (49mm,34.85mm)(49mm,35.15mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2884.139mil|Location2.X=2895.389mil|Location1.Y=2387.092mil|Location2.Y=2398.342mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2884.139mil|Location2.X=2895.389mil|Location1.Y=2387.092mil|Location2.Y=2398.342mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad ESP32-TX-2(48.5mm,36.05mm) on Top Layer And Track (48mm,34.85mm)(48mm,35.15mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2923.509mil|Location2.X=2934.759mil|Location1.Y=2387.092mil|Location2.Y=2398.342mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2923.509mil|Location2.X=2934.759mil|Location1.Y=2387.092mil|Location2.Y=2398.342mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad ESP32-TX-2(48.5mm,36.05mm) on Top Layer And Track (49mm,34.85mm)(49mm,35.15mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3363.47mil|Location2.X=3374.72mil|Location1.Y=1531.776mil|Location2.Y=1543.026mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3363.47mil|Location2.X=3374.72mil|Location1.Y=1531.776mil|Location2.Y=1543.026mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad R14-1(60.75mm,14.25mm) on Top Layer And Track (60.175mm,13.25mm)(60.175mm,13.45mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3408.745mil|Location2.X=3419.995mil|Location1.Y=1531.776mil|Location2.Y=1543.026mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3408.745mil|Location2.X=3419.995mil|Location1.Y=1531.776mil|Location2.Y=1543.026mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad R14-1(60.75mm,14.25mm) on Top Layer And Track (61.325mm,13.25mm)(61.325mm,13.45mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3363.47mil|Location2.X=3374.72mil|Location1.Y=1508.155mil|Location2.Y=1519.405mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3363.47mil|Location2.X=3374.72mil|Location1.Y=1508.155mil|Location2.Y=1519.405mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad R14-2(60.75mm,12.45mm) on Top Layer And Track (60.175mm,13.25mm)(60.175mm,13.45mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3408.745mil|Location2.X=3419.995mil|Location1.Y=1508.155mil|Location2.Y=1519.405mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3408.745mil|Location2.X=3419.995mil|Location1.Y=1508.155mil|Location2.Y=1519.405mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad R14-2(60.75mm,12.45mm) on Top Layer And Track (61.325mm,13.25mm)(61.325mm,13.45mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1577.052mil|Location2.X=1588.302mil|Location1.Y=1916.619mil|Location2.Y=1927.869mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1577.052mil|Location2.X=1588.302mil|Location1.Y=1916.619mil|Location2.Y=1927.869mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad R19-1(15.4mm,24mm) on Top Layer And Track (14.4mm,23.425mm)(14.6mm,23.425mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1577.052mil|Location2.X=1588.302mil|Location1.Y=1961.895mil|Location2.Y=1973.145mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1577.052mil|Location2.X=1588.302mil|Location1.Y=1961.895mil|Location2.Y=1973.145mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad R19-1(15.4mm,24mm) on Top Layer And Track (14.4mm,24.575mm)(14.6mm,24.575mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1553.43mil|Location2.X=1564.68mil|Location1.Y=1916.619mil|Location2.Y=1927.869mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1553.43mil|Location2.X=1564.68mil|Location1.Y=1916.619mil|Location2.Y=1927.869mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad R19-2(13.6mm,24mm) on Top Layer And Track (14.4mm,23.425mm)(14.6mm,23.425mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1553.43mil|Location2.X=1564.68mil|Location1.Y=1961.895mil|Location2.Y=1973.145mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1553.43mil|Location2.X=1564.68mil|Location1.Y=1961.895mil|Location2.Y=1973.145mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad R19-2(13.6mm,24mm) on Top Layer And Track (14.4mm,24.575mm)(14.6mm,24.575mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1309.336mil|Location2.X=1320.586mil|Location1.Y=2340.832mil|Location2.Y=2352.082mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1309.336mil|Location2.X=1320.586mil|Location1.Y=2340.832mil|Location2.Y=2352.082mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad RGB-1(9.15mm,35mm) on Top Layer And Track (8mm,31mm)(8mm,34mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1309.336mil|Location2.X=1320.586mil|Location1.Y=2403.824mil|Location2.Y=2415.074mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1309.336mil|Location2.X=1320.586mil|Location1.Y=2403.824mil|Location2.Y=2415.074mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad RGB-1(9.15mm,35mm) on Top Layer And Track (8mm,36mm)(8mm,37.75mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1309.336mil|Location2.X=1320.586mil|Location1.Y=2143.981mil|Location2.Y=2155.231mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1309.336mil|Location2.X=1320.586mil|Location1.Y=2143.981mil|Location2.Y=2155.231mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad RGB-2(9.15mm,30mm) on Top Layer And Track (8mm,26mm)(8mm,29mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1309.336mil|Location2.X=1320.586mil|Location1.Y=2206.973mil|Location2.Y=2218.223mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1309.336mil|Location2.X=1320.586mil|Location1.Y=2206.973mil|Location2.Y=2218.223mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad RGB-2(9.15mm,30mm) on Top Layer And Track (8mm,31mm)(8mm,34mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1309.336mil|Location2.X=1320.586mil|Location1.Y=1947.131mil|Location2.Y=1958.381mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1309.336mil|Location2.X=1320.586mil|Location1.Y=1947.131mil|Location2.Y=1958.381mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad RGB-3(9.15mm,25mm) on Top Layer And Track (8mm,22.25mm)(8mm,24mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1309.336mil|Location2.X=1320.586mil|Location1.Y=2010.123mil|Location2.Y=2021.373mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=1309.336mil|Location2.X=1320.586mil|Location1.Y=2010.123mil|Location2.Y=2021.373mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad RGB-3(9.15mm,25mm) on Top Layer And Track (8mm,26mm)(8mm,29mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2160.714mil|Location2.X=2171.964mil|Location1.Y=1998.312mil|Location2.Y=2009.562mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2160.714mil|Location2.X=2171.964mil|Location1.Y=1998.312mil|Location2.Y=2009.562mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad sdcard-1(28.95mm,26mm) on Top Layer And Track (29.85mm,25.5mm)(29.85mm,26.5mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2160.714mil|Location2.X=2171.964mil|Location1.Y=1998.312mil|Location2.Y=2009.562mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2160.714mil|Location2.X=2171.964mil|Location1.Y=1998.312mil|Location2.Y=2009.562mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad sdcard-1(28.95mm,26mm) on Top Layer And Track (29.85mm,25.5mm)(30.15mm,25.5mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2160.714mil|Location2.X=2171.964mil|Location1.Y=2037.682mil|Location2.Y=2048.932mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2160.714mil|Location2.X=2171.964mil|Location1.Y=2037.682mil|Location2.Y=2048.932mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad sdcard-1(28.95mm,26mm) on Top Layer And Track (29.85mm,26.5mm)(30.15mm,26.5mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2190.241mil|Location2.X=2201.491mil|Location1.Y=1998.312mil|Location2.Y=2009.562mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2190.241mil|Location2.X=2201.491mil|Location1.Y=1998.312mil|Location2.Y=2009.562mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad sdcard-2(31.05mm,26mm) on Top Layer And Track (29.85mm,25.5mm)(30.15mm,25.5mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2190.241mil|Location2.X=2201.491mil|Location1.Y=2037.682mil|Location2.Y=2048.932mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2190.241mil|Location2.X=2201.491mil|Location1.Y=2037.682mil|Location2.Y=2048.932mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.25mm &lt; 0.254mm) Between Pad sdcard-2(31.05mm,26mm) on Top Layer And Track (29.85mm,26.5mm)(30.15mm,26.5mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.25mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2463.813mil|Location2.X=2475.449mil|Location1.Y=1829.644mil|Location2.Y=1840.894mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2463.813mil|Location2.X=2475.449mil|Location1.Y=1829.644mil|Location2.Y=1840.894mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.192mm &lt; 0.254mm) Between Pad U1-10(37.142mm,22.375mm) on Top Layer And Text "U1" (37.462mm,19.009mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.192mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2456.678mil|Location2.X=2467.928mil|Location1.Y=1735.171mil|Location2.Y=1746.421mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2456.678mil|Location2.X=2467.928mil|Location1.Y=1735.171mil|Location2.Y=1746.421mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.132mm &lt; 0.254mm) Between Pad U1-11(37.142mm,17.625mm) on Top Layer And Text "U1" (37.462mm,19.009mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.132mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2474.595mil|Location2.X=2486.356mil|Location1.Y=1829.657mil|Location2.Y=1840.907mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2474.595mil|Location2.X=2486.356mil|Location1.Y=1829.657mil|Location2.Y=1840.907mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.19mm &lt; 0.254mm) Between Pad U1-9(37.777mm,22.375mm) on Top Layer And Text "U1" (37.462mm,19.009mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.19mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3071.149mil|Location2.X=3082.399mil|Location1.Y=1462.859mil|Location2.Y=1474.109mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3071.149mil|Location2.X=3082.399mil|Location1.Y=1462.859mil|Location2.Y=1474.109mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad U2-1(51.925mm,12.3mm) on Top Layer And Track (52.95mm,6.65mm)(52.95mm,13.35mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3071.149mil|Location2.X=3082.399mil|Location1.Y=1372.308mil|Location2.Y=1383.558mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3071.149mil|Location2.X=3082.399mil|Location1.Y=1372.308mil|Location2.Y=1383.558mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad U2-2(51.925mm,10mm) on Top Layer And Track (52.95mm,6.65mm)(52.95mm,13.35mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3071.149mil|Location2.X=3082.399mil|Location1.Y=1281.757mil|Location2.Y=1293.007mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3071.149mil|Location2.X=3082.399mil|Location1.Y=1281.757mil|Location2.Y=1293.007mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad U2-3(51.925mm,7.7mm) on Top Layer And Track (52.95mm,6.65mm)(52.95mm,13.35mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3248.31mil|Location2.X=3259.56mil|Location1.Y=1328.066mil|Location2.Y=1339.316mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=3248.31mil|Location2.X=3259.56mil|Location1.Y=1328.066mil|Location2.Y=1339.316mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.2mm &lt; 0.254mm) Between Pad U2-4(58.075mm,10mm) on Top Layer And Track (57.05mm,6.65mm)(57.05mm,13.35mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.2mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2416.136mil|Location2.X=2427.386mil|Location1.Y=1450.138mil|Location2.Y=1461.388mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2416.136mil|Location2.X=2427.386mil|Location1.Y=1450.138mil|Location2.Y=1461.388mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.155mm &lt; 0.254mm) Between Pad USB-Shell(35.8mm,10.03mm) on Multi-Layer And Track (36.15mm,11.75mm)(36.15mm,11.95mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.155mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2416.096mil|Location2.X=2427.346mil|Location1.Y=1328.17mil|Location2.Y=1339.42mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2416.096mil|Location2.X=2427.346mil|Location1.Y=1328.17mil|Location2.Y=1339.42mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.165mm &lt; 0.254mm) Between Pad USB-Shell(35.8mm,10.03mm) on Multi-Layer And Track (36.15mm,8.05mm)(36.15mm,8.3mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.165mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2722.22mil|Location2.X=2733.47mil|Location1.Y=1450.138mil|Location2.Y=1461.388mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2722.22mil|Location2.X=2733.47mil|Location1.Y=1450.138mil|Location2.Y=1461.388mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.155mm &lt; 0.254mm) Between Pad USB-Shell(44.2mm,10.03mm) on Multi-Layer And Track (43.85mm,11.75mm)(43.85mm,11.95mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.155mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2722.26mil|Location2.X=2733.51mil|Location1.Y=1328.17mil|Location2.Y=1339.42mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2722.26mil|Location2.X=2733.51mil|Location1.Y=1328.17mil|Location2.Y=1339.42mil|Absolute=True">Silk To Solder Mask Clearance Constraint: (0.165mm &lt; 0.254mm) Between Pad USB-Shell(44.2mm,10.03mm) on Multi-Layer And Track (43.85mm,8.05mm)(43.85mm,8.3mm) on Top Overlay [Top Overlay] to [Top Solder] clearance [0.165mm]</acronym></a><br></td>
+</tr>
+</table></a><hr color="#EEEEEE"><a href="#top" style="font-size: 0.9em">Back to top</a><br><br><a name="IDOVFC4NR3ZZCXIXBCOQB2CRWRUIWGTKUALI3ZZSIWTSNXPTDX1NAB"><table>
+<tr>
+<th style="text-align : left" colspan="1" class="rule">Silk to Silk (Clearance=0.254mm) (All),(All)</th>
+</tr>
+<tr class="onmouseout_odd" onmouseover="className = 'onmouseover_odd'" onmouseout="className = 'onmouseout_odd'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2403.062mil|Location2.X=2414.312mil|Location1.Y=2511.532mil|Location2.Y=2525.171mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2403.062mil|Location2.X=2414.312mil|Location1.Y=2511.532mil|Location2.Y=2525.171mil|Absolute=True">Silk To Silk Clearance Constraint: (0.189mm &lt; 0.254mm) Between Arc (35.45mm,38.5mm) on Top Overlay And Text "ESP32_BOOT" (35.993mm,38.658mm) on Top Overlay Silk Text to Silk Clearance [0.189mm]</acronym></a><br></td>
+</tr>
+<tr class="onmouseout_even" onmouseover="className = 'onmouseover_even'" onmouseout="className = 'onmouseout_even'">
+<td class="column1"><a href="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2402.691mil|Location2.X=2413.941mil|Location1.Y=1742.774mil|Location2.Y=1754.024mil|Absolute=True" class="callback"><acronym title="dxpprocess://PCB:Zoom?document=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc;viewname=PCBEditor;Action=AREA_DYNAMICZOOM|Location1.X=2402.691mil|Location2.X=2413.941mil|Location1.Y=1742.774mil|Location2.Y=1754.024mil|Absolute=True">Silk To Silk Clearance Constraint: (0.08mm &lt; 0.254mm) Between Text "U1" (37.462mm,19.009mm) on Top Overlay And Track (35.631mm,18.006mm)(35.631mm,21.994mm) on Top Overlay Silk Text to Silk Clearance [0.08mm]</acronym></a><br></td>
+</tr>
+</table></a><hr color="#EEEEEE"><a href="#top" style="font-size: 0.9em">Back to top</a><br><br></body>
+</html>
