@@ -1,0 +1,12 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : Project [bluetooth_clock.PrjPcb]
+   Generated File[bluetooth_clock.TXT]
+   Generated File[bluetooth_clock.LDP]
+   Generated File[bluetooth_clock.DRR]
+
+
+Files Generated   : 3
+Documents Printed : 0
+
+Finished Output Generation At 21:21:08 On 22-Nov-21
