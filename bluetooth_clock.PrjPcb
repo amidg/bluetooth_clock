@@ -160,6 +160,23 @@ GenerateClassCluster=0
 DocumentUniqueId=WFQYLJLK
 
 [Document8]
+DocumentPath=Manufacturing\drill.Cam
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=
+
+[Document9]
 DocumentPath=Manufacturing\gerber.Cam
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -177,62 +194,74 @@ GenerateClassCluster=0
 DocumentUniqueId=
 
 [GeneratedDocument1]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.EXTREP
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.DRR
 DItemRevisionGUID=
 
 [GeneratedDocument2]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GBL
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.EXTREP
 DItemRevisionGUID=
 
 [GeneratedDocument3]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GBO
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GBL
 DItemRevisionGUID=
 
 [GeneratedDocument4]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GBP
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GBO
 DItemRevisionGUID=
 
 [GeneratedDocument5]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GBS
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GBP
 DItemRevisionGUID=
 
 [GeneratedDocument6]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GKO
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GBS
 DItemRevisionGUID=
 
 [GeneratedDocument7]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GPB
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GKO
 DItemRevisionGUID=
 
 [GeneratedDocument8]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GPT
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GPB
 DItemRevisionGUID=
 
 [GeneratedDocument9]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GTL
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GPT
 DItemRevisionGUID=
 
 [GeneratedDocument10]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GTO
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GTL
 DItemRevisionGUID=
 
 [GeneratedDocument11]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GTP
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GTO
 DItemRevisionGUID=
 
 [GeneratedDocument12]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GTS
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GTP
 DItemRevisionGUID=
 
 [GeneratedDocument13]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.REP
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.GTS
 DItemRevisionGUID=
 
 [GeneratedDocument14]
-DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.RUL
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.LDP
 DItemRevisionGUID=
 
 [GeneratedDocument15]
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.REP
+DItemRevisionGUID=
+
+[GeneratedDocument16]
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.RUL
+DItemRevisionGUID=
+
+[GeneratedDocument17]
+DocumentPath=Project Outputs for bluetooth_clock\bluetooth_clock.TXT
+DItemRevisionGUID=
+
+[GeneratedDocument18]
 DocumentPath=Project Outputs for bluetooth_clock\Design Rule Check - bluetooth_clock.html
 DItemRevisionGUID=
 
@@ -467,7 +496,7 @@ OutputDefault1=0
 Configuration1_Name1=ForceUpdateSettings
 Configuration1_Item1=False
 Configuration1_Name2=OutputConfigurationParameter1
-Configuration1_Item2=BoardEdgeRoutToolDia=2000000|GenerateBoardEdgeRout=False|GenerateDrilledSlotsG85=False|GenerateEIADrillFile=False|GenerateSeparatePlatedNonPlatedFiles=False|NumberOfDecimals=4|NumberOfUnits=2|OptimizeChangeLocationCommands=True|OriginPosition=Relative|Record=DrillView|Units=Imperial|ZeroesMode=SuppressLeadingZeroes|DocumentPath=C:\Users\amidg\OneDrive\GUSEV TECH\CAPSTONE\Hardware\Hardware Designs\ANTS-DCU_B1\ANTS-DCU_RevB1.PCBDOC
+Configuration1_Item2=BoardEdgeRoutToolDia=2000000|GenerateBoardEdgeRout=False|GenerateDrilledSlotsG85=False|GenerateEIADrillFile=False|GenerateSeparatePlatedNonPlatedFiles=False|NumberOfDecimals=4|NumberOfUnits=2|OptimizeChangeLocationCommands=True|OriginPosition=Relative|Record=DrillView|Units=Imperial|ZeroesMode=SuppressLeadingZeroes|DocumentPath=C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc
 OutputType2=Mask
 OutputName2=Solder/Paste Mask Prints
 OutputDocumentPath2=

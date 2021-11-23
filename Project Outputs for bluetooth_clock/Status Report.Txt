@@ -1,12 +1,23 @@
-Output: NC Drill Files
-Type  : NC Drill
-From  : Project [bluetooth_clock.PrjPcb]
-   Generated File[bluetooth_clock.TXT]
-   Generated File[bluetooth_clock.LDP]
-   Generated File[bluetooth_clock.DRR]
+Output: Gerber Files
+Type  : Gerber
+From  : Variant [[No Variations]] of Project [bluetooth_clock.PrjPcb]
+   Generated File[bluetooth_clock.GTO]
+   Generated File[bluetooth_clock.GTP]
+   Generated File[bluetooth_clock.GTS]
+   Generated File[bluetooth_clock.GTL]
+   Generated File[bluetooth_clock.GBL]
+   Generated File[bluetooth_clock.GBS]
+   Generated File[bluetooth_clock.GBP]
+   Generated File[bluetooth_clock.GBO]
+   Generated File[bluetooth_clock.GKO]
+   Generated File[bluetooth_clock.GPT]
+   Generated File[bluetooth_clock.GPB]
+   Generated File[bluetooth_clock.RUL]
+   Generated File[bluetooth_clock.EXTREP]
+   Generated File[bluetooth_clock.REP]
 
 
-Files Generated   : 3
+Files Generated   : 14
 Documents Printed : 0
 
-Finished Output Generation At 21:21:08 On 22-Nov-21
+Finished Output Generation At 21:27:38 On 22-Nov-21
