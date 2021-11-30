@@ -1,3 +1,4 @@
 Record=TopLevelDocument|FileName=audio.SchDoc|SheetNumber= 
 Record=NoMainPathDocument|SourceDocument=audio.SchDoc|FileName=ESP32.SchDoc|SheetNumber= 
+Record=NoMainPathDocument|SourceDocument=audio.SchDoc|FileName=sd_card.SchDoc|SheetNumber= 
 Record=NoMainPathDocument|SourceDocument=audio.SchDoc|FileName=USB-ESP32.SchDoc|SheetNumber= 
