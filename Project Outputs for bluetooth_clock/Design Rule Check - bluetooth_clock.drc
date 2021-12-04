@@ -1,7 +1,7 @@
 Protel Design System Design Rule Check
 PCB File : C:\Users\amidg\OneDrive\GUSEV TECH\PROJECTS\bluetooth_clock\bluetooth_clock.PcbDoc
-Date     : 22-Nov-21
-Time     : 20:49:43
+Date     : 03-Dec-21
+Time     : 22:41:32
 
 Processing Rule : Clearance Constraint (Gap=0.254mm) (All),(All)
 Rule Violations :0
@@ -163,4 +163,4 @@ Rule Violations :0
 
 Violations Detected : 118
 Waived Violations : 0
-Time Elapsed        : 00:00:02
+Time Elapsed        : 00:00:01
