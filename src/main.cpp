@@ -22,9 +22,14 @@
 #include "Adafruit_NeoMatrix\Adafruit_NeoMatrix.h"
 #include "Adafruit_NeoPixel\Adafruit_NeoPixel.h"
 
+#include "wifi_spots.h"
+
 // ================== MULTICORE OPERATION ================== //
 TaskHandle_t Core0task; //task to run on core #0
 TaskHandle_t Core1task; //task to run on core #1
+
+// char* CPUusage = "";
+// char* RAMusage = "";
 
 // ================== LED MATRIX ================== //
 #define PIN 21 //led matrix pin
@@ -39,8 +44,7 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(32, 8, PIN,
 const uint16_t colors[] = {
   matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(0, 0, 255) };
 
-int screenMode = 1;
-String currentTime = "01:04 AM";
+int screenMode = 2; //1 default
 
 #define rainbowTimeout 10 //timeout in ms
 void drawRainbow(int delayBetweenFrames);
@@ -70,6 +74,14 @@ void IRAM_ATTR nextISR();
 void Core0loopTask( void * parameter );
 void Core1loopTask( void * parameter );
 
+
+// ================= DAY AND TIME ====================== //
+String currentTime = "01:04 AM"; //time I started developing this firwmare
+unsigned long timeTakenAt = 0;
+unsigned long timeout = 60000; //1 minute
+void connectToWiFi();
+void setupLocalTime();
+
 void setup() {
   Serial.begin(9600);
 
@@ -89,13 +101,8 @@ void setup() {
       10000,         // Stack size in words
       NULL,          // Task input parameter
       1,             // Priority of the task
-      &Core0task,    // Task handle
+      &Core1task,    // Task handle
       1);            // Core where the task should run
-
-  // matrix setup
-  matrix.begin();
-  matrix.setTextWrap(false);
-  matrix.setBrightness(BRIGHTNESS);
 
   // button setup
   pinMode(CHANGE_MODE, INPUT);  attachInterrupt(CHANGE_MODE, modeISR, RISING);
@@ -108,28 +115,46 @@ void setup() {
 
   // sd card setup
 
-
-  // wi-fi setup
-
+  // time setup
+  timeTakenAt = millis(); //initial setup
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
 
   // bluetooth setup
-
-
 
 }
 
 void Core0loopTask( void * parameter ) {
   //core 0 task is responsible for the screen and buttons
+
+  // matrix setup --> do in Core #0
+  matrix.begin();
+  matrix.setTextWrap(false);
+  matrix.setBrightness(BRIGHTNESS);
+
+
   while(true) {
     // =========== infinite loop for core #0 =========== //
 
     switch (screenMode) {
       case 1:
         // rainbow screen
+        WiFi.disconnect();
         drawRainbow(rainbowTimeout);
         break;
       case 2:
         // time screen
+        if (millis() - timeTakenAt >= timeout) {
+
+          if (WiFi.status() != WL_CONNECTED) { connectToWiFi(); };
+
+          setupLocalTime();
+          timeTakenAt = millis();
+          Serial.println("time taken");
+        } else {
+          WiFi.disconnect();
+          Serial.println(millis() - timeTakenAt);
+        }
+        
         printText(currentTime, colors[0]);
         break;
       case 3:
@@ -149,6 +174,11 @@ void Core0loopTask( void * parameter ) {
         break;
       case LAST_SCREEN:
         // cpu usage screen
+
+        //print ram
+        // sprintf(RAMusage, "RAM: %lu %", (100 - 100*(ESP.getFreeHeap()/520000) ));
+        // printText( String(RAMusage), colors[0] );
+        // Serial.println(RAMusage);
         break;
     }
 
@@ -158,10 +188,15 @@ void Core0loopTask( void * parameter ) {
 
 void Core1loopTask( void * parameter ) {
   //core 1 task is responsible for the communication
+  // wi-fi setup
+  connectToWiFi();  
+
   while(true) {
     // =========== infinite loop for core #1 =========== //
 
-    Serial.println(digitalRead(PREV_TRACK));
+          
+
+    //Serial.println(digitalRead(PREV_TRACK));
 
     
     // =========== infinite loop for core #1 =========== //
@@ -181,7 +216,7 @@ void drawRainbow(int delayBetweenFrames) {
 void printText(String text, uint16_t desiredColor) {
   matrix.setTextColor(desiredColor);
   matrix.fillScreen(0);
-  matrix.setCursor(1, 0);
+  matrix.setCursor(2, 0);
   matrix.print(text);
   matrix.show();
   delay(100);
@@ -207,6 +242,45 @@ void IRAM_ATTR nextISR() {
   
 }
 
+void connectToWiFi() {
+  //connect to one of the Wi-Fi
+  unsigned int timeoutWiFi = 5000;
+  unsigned long connectionTime = millis();
+
+  for (int i = 0; i < numberOfHotspots && WiFi.status() != WL_CONNECTED; i++) {
+    //try one of the wi-fi hotspots
+      Serial.print("Connecting to ");
+      Serial.println(ssid[i]);
+      WiFi.begin(ssid[i], password[i]);
+
+      while (WiFi.status() != WL_CONNECTED && (millis() - connectionTime < timeoutWiFi) ) {
+        Serial.print(".");
+      }
+
+      if (WiFi.status() == WL_CONNECTED) {
+        Serial.println("");
+        Serial.println("WiFi connected.");
+        break;
+      }
+
+      if (i == numberOfHotspots && WiFi.status() != WL_CONNECTED) { i = 0; };
+  }
+}
+
+void setupLocalTime(){
+  struct tm timeinfo;
+
+  while (!getLocalTime(&timeinfo)) {
+    //waint until time is obtained
+  } 
+
+  currentTime = String(timeinfo.tm_hour) + ":";
+
+  if (timeinfo.tm_min < 10)
+    currentTime = currentTime + "0" + String(timeinfo.tm_min);
+  else
+    currentTime = currentTime + String(timeinfo.tm_min);
+}
 
 //////////////////////////////////////////////
 void loop() { 
