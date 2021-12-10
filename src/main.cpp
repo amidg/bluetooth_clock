@@ -44,13 +44,11 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(32, 8, PIN,
 const uint16_t colors[] = {
   matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(0, 0, 255) };
 
-int screenMode = 2; //1 default
+int screenMode = 1; //1 default
 
 #define rainbowTimeout 10 //timeout in ms
 void drawRainbow(int delayBetweenFrames);
 void printText(String text, uint16_t desiredColor);
-
-
 
 // ================= BUTTONS AND SCREEN ================ //
 #define CHANGE_MODE 27
@@ -62,6 +60,12 @@ void IRAM_ATTR modeISR();
 void IRAM_ATTR prevISR();
 void IRAM_ATTR playISR();
 void IRAM_ATTR nextISR();
+
+void timeScreen();
+void messageScreen();
+void musicScreen();
+void weatherScreen();
+void loveYouScreen();
 
 // ================== STEREO AUDIO AMPLIFIER ================== //
 
@@ -137,25 +141,61 @@ void Core0loopTask( void * parameter ) {
 
     switch (screenMode) {
       case 1:
-        // rainbow screen
-        WiFi.disconnect();
-        drawRainbow(rainbowTimeout);
+        //time screen
+        timeScreen();
         break;
       case 2:
+        // rainbow screen
+        drawRainbow(rainbowTimeout);
+        break;
+      case 3:
+        // message screen
+        messageScreen();
+        break;
+      case 4:
+        // weather screen
+        weatherScreen();
+        break;
+      case 5:
+        // music screen
+        musicScreen();
+        break;
+      case 6:
+        // love you screen
+        loveYouScreen();
+        break;
+      case 7:
+        // matrix
+        break;
+      case LAST_SCREEN:
+        // cpu usage screen
+
+        //print ram
+        // sprintf(RAMusage, "RAM: %lu %", (100 - 100*(ESP.getFreeHeap()/520000) ));
+        // printText( String(RAMusage), colors[0] );
+        // Serial.println(RAMusage);
+        break;
+    }
+
+    // =========== infinite loop for core #0 =========== //
+  }
+}
+
+void Core1loopTask( void * parameter ) {
+  //core 1 task is responsible for the communication
+  // wi-fi setup
+  //while (WiFi.status() != WL_CONNECTED) { connectToWiFi(); }; //don't use, causes page fault due to multiple wi-fi interrupts
+  
+  while(true) {
+    // =========== infinite loop for core #1 =========== //
+    switch (screenMode) {
+      case 1:
         // time screen
-        if (millis() - timeTakenAt >= timeout) {
-
-          if (WiFi.status() != WL_CONNECTED) { connectToWiFi(); };
-
-          setupLocalTime();
-          timeTakenAt = millis();
-          Serial.println("time taken");
-        } else {
-          WiFi.disconnect();
-          Serial.println(millis() - timeTakenAt);
-        }
-        
-        printText(currentTime, colors[0]);
+        //Serial.println(screenMode);
+        break;
+      case 2:
+        // rainbow screen
+        WiFi.disconnect();
         break;
       case 3:
         // message screen
@@ -181,29 +221,46 @@ void Core0loopTask( void * parameter ) {
         // Serial.println(RAMusage);
         break;
     }
-
-    // =========== infinite loop for core #0 =========== //
-  }
-}
-
-void Core1loopTask( void * parameter ) {
-  //core 1 task is responsible for the communication
-  // wi-fi setup
-  connectToWiFi();  
-
-  while(true) {
-    // =========== infinite loop for core #1 =========== //
-
-          
-
-    //Serial.println(digitalRead(PREV_TRACK));
-
     
     // =========== infinite loop for core #1 =========== //
   }
 }
 
 ////// SUPPORTING FUNCTIONALITY /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//screen functions
+void timeScreen() {
+  // time screen
+  if (millis() - timeTakenAt >= timeout) {
+
+  while (WiFi.status() != WL_CONNECTED) { connectToWiFi(); };
+
+  setupLocalTime();
+  timeTakenAt = millis();
+  Serial.println("time taken");
+  } else {
+    WiFi.disconnect();
+    Serial.println(millis() - timeTakenAt);
+  }
+        
+  printText(currentTime, colors[0]);
+}
+
+void messageScreen() {
+
+}
+
+void musicScreen() {
+
+}
+
+void weatherScreen() {
+
+} 
+
+void loveYouScreen() {
+
+}
+
 // MATRIX LED
 void drawRainbow(int delayBetweenFrames) {
   for(long firstPixelHue = 0; firstPixelHue < 5*65536; firstPixelHue += 256) {
@@ -274,7 +331,10 @@ void setupLocalTime(){
     //waint until time is obtained
   } 
 
-  currentTime = String(timeinfo.tm_hour) + ":";
+  if (timeinfo.tm_hour < 10)
+    currentTime = currentTime + "0" + String(timeinfo.tm_hour) + ":";
+  else
+    currentTime = currentTime + String(timeinfo.tm_hour) + ":";
 
   if (timeinfo.tm_min < 10)
     currentTime = currentTime + "0" + String(timeinfo.tm_min);
