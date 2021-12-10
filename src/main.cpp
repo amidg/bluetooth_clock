@@ -125,16 +125,20 @@ void setup() {
 
   // bluetooth setup
 
-}
-
-void Core0loopTask( void * parameter ) {
-  //core 0 task is responsible for the screen and buttons
-
   // matrix setup --> do in Core #0
   matrix.begin();
   matrix.setTextWrap(false);
   matrix.setBrightness(BRIGHTNESS);
 
+}
+
+void Core0loopTask( void * parameter ) {
+  //core 0 task is responsible for the screen and buttons
+
+  // // matrix setup --> do in Core #0
+  // matrix.begin();
+  // matrix.setTextWrap(false);
+  // matrix.setBrightness(BRIGHTNESS);
 
   while(true) {
     // =========== infinite loop for core #0 =========== //
@@ -332,9 +336,9 @@ void setupLocalTime(){
   } 
 
   if (timeinfo.tm_hour < 10)
-    currentTime = currentTime + "0" + String(timeinfo.tm_hour) + ":";
+    currentTime = "0" + String(timeinfo.tm_hour) + ":";
   else
-    currentTime = currentTime + String(timeinfo.tm_hour) + ":";
+    currentTime = String(timeinfo.tm_hour) + ":";
 
   if (timeinfo.tm_min < 10)
     currentTime = currentTime + "0" + String(timeinfo.tm_min);
