@@ -23,6 +23,7 @@
 #include "Adafruit_NeoPixel\Adafruit_NeoPixel.h"
 
 #include "wifi_spots.h"
+#include "images.h"
 
 // ================== MULTICORE OPERATION ================== //
 TaskHandle_t Core0task; //task to run on core #0
@@ -33,8 +34,10 @@ TaskHandle_t Core1task; //task to run on core #1
 
 // ================== LED MATRIX ================== //
 #define PIN 21 //led matrix pin
-#define BRIGHTNESS 50
-#define LAST_SCREEN 8
+int BRIGHTNESS_DAY = 50;
+#define BRIGHTNESS_NIGHT 20
+#define LAST_SCREEN 9
+bool nightModeEnabled = false;
 
 Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(32, 8, PIN,
   NEO_MATRIX_BOTTOM  + NEO_MATRIX_RIGHT +
@@ -42,9 +45,13 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(32, 8, PIN,
   NEO_GRB            + NEO_KHZ800);
 
 const uint16_t colors[] = {
-  matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(0, 0, 255) };
+  matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(0, 0, 255) }; //green, red, blue
 
-int screenMode = 1; //1 default
+int screenMode = LAST_SCREEN; //1 default
+int prevScreen = screenMode;
+bool playMusic = false;
+bool next = false;
+bool prev = false;
 
 #define rainbowTimeout 10 //timeout in ms
 void drawRainbow(int delayBetweenFrames);
@@ -56,6 +63,8 @@ void printText(String text, uint16_t desiredColor);
 #define PLAY_PAUSE  33
 #define NEXT_TRACK  34
 
+int musicTrackNum = 0;
+
 void IRAM_ATTR modeISR();
 void IRAM_ATTR prevISR();
 void IRAM_ATTR playISR();
@@ -66,6 +75,11 @@ void messageScreen();
 void musicScreen();
 void weatherScreen();
 void loveYouScreen();
+void synthwaveScreen();
+void fireScreen();
+void brightnessScreen();
+void drawVerticalBar(int x);
+void clearMatrix();
 
 // ================== STEREO AUDIO AMPLIFIER ================== //
 
@@ -99,14 +113,14 @@ void setup() {
       &Core0task,    // Task handle
       0);            // Core where the task should run
 
-  xTaskCreatePinnedToCore(
-      Core1loopTask, // Function to implement the task
-      "Core1",       // Name of the task
-      10000,         // Stack size in words
-      NULL,          // Task input parameter
-      1,             // Priority of the task
-      &Core1task,    // Task handle
-      1);            // Core where the task should run
+  // xTaskCreatePinnedToCore( //replaced by loop()
+  //     Core1loopTask, // Function to implement the task
+  //     "Core1",       // Name of the task
+  //     10000,         // Stack size in words
+  //     NULL,          // Task input parameter
+  //     1,             // Priority of the task
+  //     &Core1task,    // Task handle
+  //     1);            // Core where the task should run
 
   // button setup
   pinMode(CHANGE_MODE, INPUT);  attachInterrupt(CHANGE_MODE, modeISR, RISING);
@@ -128,20 +142,16 @@ void setup() {
   // matrix setup --> do in Core #0
   matrix.begin();
   matrix.setTextWrap(false);
-  matrix.setBrightness(BRIGHTNESS);
+  matrix.setBrightness(BRIGHTNESS_DAY);
 
 }
 
 void Core0loopTask( void * parameter ) {
   //core 0 task is responsible for the screen and buttons
-
-  // // matrix setup --> do in Core #0
-  // matrix.begin();
-  // matrix.setTextWrap(false);
-  // matrix.setBrightness(BRIGHTNESS);
-
   while(true) {
     // =========== infinite loop for core #0 =========== //
+    if (nightModeEnabled) 
+      matrix.setBrightness(BRIGHTNESS_NIGHT);
 
     switch (screenMode) {
       case 1:
@@ -169,15 +179,17 @@ void Core0loopTask( void * parameter ) {
         loveYouScreen();
         break;
       case 7:
-        // matrix
+        // synthwave screen
+        synthwaveScreen();
+        //zerotwoScreen();
+        break;
+      case 8:
+        // fire screen
+        fireScreen();
         break;
       case LAST_SCREEN:
-        // cpu usage screen
-
-        //print ram
-        // sprintf(RAMusage, "RAM: %lu %", (100 - 100*(ESP.getFreeHeap()/520000) ));
-        // printText( String(RAMusage), colors[0] );
-        // Serial.println(RAMusage);
+        // brightness screen
+        brightnessScreen();
         break;
     }
 
@@ -185,6 +197,7 @@ void Core0loopTask( void * parameter ) {
   }
 }
 
+/* LOOP 1 CORE TASK
 void Core1loopTask( void * parameter ) {
   //core 1 task is responsible for the communication
   // wi-fi setup
@@ -194,8 +207,8 @@ void Core1loopTask( void * parameter ) {
     // =========== infinite loop for core #1 =========== //
     switch (screenMode) {
       case 1:
-        // time screen
-        //Serial.println(screenMode);
+        //time screen
+        
         break;
       case 2:
         // rainbow screen
@@ -203,29 +216,84 @@ void Core1loopTask( void * parameter ) {
         break;
       case 3:
         // message screen
+        
         break;
       case 4:
         // weather screen
+        
         break;
       case 5:
-        // matrix screen
+        // music screen
+        
         break;
       case 6:
         // love you screen
+        
         break;
       case 7:
-        // matrix
+        // synthwave screen
+        
+        break;
+      case 8:
+        // fire screen
+        
         break;
       case LAST_SCREEN:
-        // cpu usage screen
-
-        //print ram
-        // sprintf(RAMusage, "RAM: %lu %", (100 - 100*(ESP.getFreeHeap()/520000) ));
-        // printText( String(RAMusage), colors[0] );
-        // Serial.println(RAMusage);
+        
         break;
     }
     
+    // =========== infinite loop for core #1 =========== //
+  }
+} // */
+
+void loop() {
+  while(true) {
+    // =========== infinite loop for core #1 =========== //
+    //Serial.println("loop() runs on: " + String(xPortGetCoreID()));
+    switch (screenMode) {
+      case 1:
+        //time screen
+        
+        break;
+      case 2:
+        // rainbow screen
+        WiFi.disconnect();
+        break;
+      case 3:
+        // message screen
+        
+        break;
+      case 4:
+        // weather screen
+        
+        break;
+      case 5:
+        // music screen
+        
+        break;
+      case 6:
+        // love you screen
+        
+        break;
+      case 7:
+        // synthwave screen
+        
+        break;
+      case 8:
+        // fire screen
+        
+        break;
+      case LAST_SCREEN:
+        
+        break;
+    }
+
+    //debug only
+    //Serial.println("Screen Mode: " + String(screenMode));
+    //Serial.println("Track #: " + String(musicTrackNum));
+    //Serial.println("Play? " + String(playMusic));
+
     // =========== infinite loop for core #1 =========== //
   }
 }
@@ -243,6 +311,7 @@ void timeScreen() {
   Serial.println("time taken");
   } else {
     WiFi.disconnect();
+    //Serial.println("core 0 task runs on: " + String(xPortGetCoreID()));
     Serial.println(millis() - timeTakenAt);
   }
         
@@ -250,24 +319,63 @@ void timeScreen() {
 }
 
 void messageScreen() {
-
+  matrix.fillScreen(0);
+  matrix.print("MSG");
+  matrix.show();
 }
 
 void musicScreen() {
-
+  matrix.fillScreen(0);
+  matrix.print("msic");
+  matrix.show();
 }
 
 void weatherScreen() {
-
+  matrix.fillScreen(0);
+  matrix.print("wthr");
+  matrix.show();
 } 
 
 void loveYouScreen() {
 
 }
 
+void synthwaveScreen() {
+  int pixelNum = 0;
+
+  for (int x = 0; x < 32 && pixelNum < 256; x++) {
+    for (int y = 0; y < 8; y++) {
+      matrix.writePixel(synthwave[pixelNum].x, synthwave[pixelNum].y, matrix.Color(synthwave[pixelNum].green, synthwave[pixelNum].red, synthwave[pixelNum].blue));
+      //delay(100);
+      matrix.show();
+      pixelNum++;
+    }
+  }
+}
+
+void fireScreen() {
+  // work in progress
+  matrix.fillScreen(0);
+  matrix.print("fire");
+  matrix.show();
+}
+
+void brightnessScreen() {
+  int brightBar = 0;
+
+  playMusic = false;
+  while(!playMusic) {
+    clearMatrix();
+    brightBar = 3*BRIGHTNESS_DAY/10;
+    drawVerticalBar(brightBar);
+    matrix.setBrightness(BRIGHTNESS_DAY);
+  }
+}
+
 // MATRIX LED
 void drawRainbow(int delayBetweenFrames) {
-  for(long firstPixelHue = 0; firstPixelHue < 5*65536; firstPixelHue += 256) {
+  prevScreen = screenMode;
+  for(long firstPixelHue = 0; firstPixelHue < 5*65536 && prevScreen == screenMode; firstPixelHue += 256) {
     matrix.rainbow(firstPixelHue);
     matrix.show(); // Update strip with new contents
     delay(delayBetweenFrames);  // Pause for a moment
@@ -285,6 +393,8 @@ void printText(String text, uint16_t desiredColor) {
 
 // INTERRUPT SERVICE ROUTINES
 void IRAM_ATTR modeISR() {
+  prevScreen = screenMode;
+
   screenMode++;
 
   if (screenMode > LAST_SCREEN)
@@ -292,15 +402,29 @@ void IRAM_ATTR modeISR() {
 }
 
 void IRAM_ATTR prevISR() {
-  
+  if (screenMode == LAST_SCREEN && BRIGHTNESS_DAY > 10) {
+    BRIGHTNESS_DAY -= 10;
+  } else {
+    musicTrackNum--;
+
+    if (musicTrackNum <= 0) 
+      musicTrackNum = 0;
+  }  
 }
 
 void IRAM_ATTR playISR() {
-  
+  playMusic = !playMusic;
 }
 
 void IRAM_ATTR nextISR() {
-  
+  if (screenMode == LAST_SCREEN && BRIGHTNESS_DAY < 100) {
+    BRIGHTNESS_DAY += 10;
+  } else {
+    musicTrackNum++;
+
+    if (musicTrackNum > 10) 
+      musicTrackNum = 10;
+  }
 }
 
 void connectToWiFi() {
@@ -346,8 +470,19 @@ void setupLocalTime(){
     currentTime = currentTime + String(timeinfo.tm_min);
 }
 
-//////////////////////////////////////////////
-void loop() { 
-  //do nothing here, exists just to pass the compiler
-}
+void drawVerticalBar(int x) {
+  for (int currentBar = 0; currentBar <= x; currentBar++) {
+    for (int y = 0; y < 8; y++) {
+      matrix.writePixel(currentBar, y, colors[0]);
+    }
+  }
   
+  matrix.show();
+}
+
+void clearMatrix() {
+  for(int i = 0; i < 256; i++) {
+    matrix.setPixelColor(i, matrix.Color(0, 0, 0));
+  }
+  matrix.show();
+}
