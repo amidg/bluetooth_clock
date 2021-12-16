@@ -1,8 +1,9 @@
 #include <WiFi.h>
 #include "time.h"
+#include <PubSubClient.h>
 
 const char* ntpServer = "pool.ntp.org";
-const long  gmtOffset_sec = -5*3600;
+const long  gmtOffset_sec = -8*3600; //vancouver time -8, toronto time -5
 const int   daylightOffset_sec = 3600;
 
 

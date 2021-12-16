@@ -12,6 +12,7 @@
   FOR SUCCESSFULL BUILD:
   execute in PlatformIO CLI (VIEW -> COMMAND PALLETE -> PLATFORM IO CLI)
   pio lib install "adafruit/Adafruit BusIO"
+  pio lib install "knolleary/PubSubClient"
 
 */
 
@@ -27,7 +28,7 @@
 
 // ================== MULTICORE OPERATION ================== //
 TaskHandle_t Core0task; //task to run on core #0
-TaskHandle_t Core1task; //task to run on core #1
+//TaskHandle_t Core1task; //task to run on core #1 --> replaced by loop()
 
 // char* CPUusage = "";
 // char* RAMusage = "";
@@ -81,7 +82,7 @@ void brightnessScreen();
 void drawVerticalBar(int x);
 void clearMatrix();
 
-// ================== STEREO AUDIO AMPLIFIER ================== //
+// ================== STEREO AUDIO SETUP ================== //
 
 
 // ================== SD CARD SETUP ================== //
