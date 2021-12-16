@@ -47,7 +47,7 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(32, 8, PIN,
 const uint16_t colors[] = {
   matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(0, 0, 255) }; //green, red, blue
 
-int screenMode = LAST_SCREEN; //1 default
+int screenMode = 1; //1 default
 int prevScreen = screenMode;
 bool playMusic = false;
 bool next = false;
@@ -302,6 +302,8 @@ void loop() {
 //screen functions
 void timeScreen() {
   // time screen
+  printText(currentTime, colors[0]);
+
   if (millis() - timeTakenAt >= timeout) {
 
   while (WiFi.status() != WL_CONNECTED) { connectToWiFi(); };
@@ -314,30 +316,22 @@ void timeScreen() {
     //Serial.println("core 0 task runs on: " + String(xPortGetCoreID()));
     Serial.println(millis() - timeTakenAt);
   }
-        
-  printText(currentTime, colors[0]);
 }
 
 void messageScreen() {
-  matrix.fillScreen(0);
-  matrix.print("MSG");
-  matrix.show();
+  printText("msg", colors[0]);
 }
 
 void musicScreen() {
-  matrix.fillScreen(0);
-  matrix.print("msic");
-  matrix.show();
+  printText("music", colors[0]);
 }
 
 void weatherScreen() {
-  matrix.fillScreen(0);
-  matrix.print("wthr");
-  matrix.show();
+  printText("rain", colors[0]);
 } 
 
 void loveYouScreen() {
-
+  printText("love", colors[0]);
 }
 
 void synthwaveScreen() {
@@ -355,9 +349,7 @@ void synthwaveScreen() {
 
 void fireScreen() {
   // work in progress
-  matrix.fillScreen(0);
-  matrix.print("fire");
-  matrix.show();
+  printText("fire", colors[0]);
 }
 
 void brightnessScreen() {
@@ -370,6 +362,9 @@ void brightnessScreen() {
     drawVerticalBar(brightBar);
     matrix.setBrightness(BRIGHTNESS_DAY);
   }
+
+  screenMode = 1;
+  clearMatrix();
 }
 
 // MATRIX LED
