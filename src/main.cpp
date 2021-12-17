@@ -25,13 +25,25 @@
 
 #include "wifi_spots.h"
 #include "images.h"
+#include <EEPROM.h>
 
 // ================== MULTICORE OPERATION ================== //
 TaskHandle_t Core0task; //task to run on core #0
 //TaskHandle_t Core1task; //task to run on core #1 --> replaced by loop()
 
-// char* CPUusage = "";
-// char* RAMusage = "";
+#define EEPROM_SIZE (byteSizeForMessage + byteSizeForScreen + byteSizeForBrightness + byteSizeForHour + byteSizeForMinute) // define the number of bytes you want to access
+/*
+  byte 1 -> last screen used
+  byte 2 -> last screen brightness
+  byte 3..22 -> 20 chars for message
+  byte 23 -> byte for hour
+  byte 24 -> byte for minutes
+*/
+
+void readLastDataFromEEPROM();
+int firstScan = true; // property similar to PLC because this code is also some sort of a fake RTOS
+void setIntegerToEEPROM(byte byte, int data);
+void setCharToEEPROM(byte byte, char data);
 
 // ================== LED MATRIX ================== //
 #define PIN 21 //led matrix pin
@@ -81,6 +93,8 @@ void fireScreen();
 void brightnessScreen();
 void drawVerticalBar(int x);
 void clearMatrix();
+void setupMQTT();
+void reconnect();
 
 // ================== STEREO AUDIO SETUP ================== //
 
@@ -95,10 +109,11 @@ void Core1loopTask( void * parameter );
 
 
 // ================= DAY AND TIME ====================== //
-String currentTime = "01:04 AM"; //time I started developing this firwmare
+String currentTime = " ";
 unsigned long timeTakenAt = 0;
 unsigned long timeout = 60000; //1 minute
 void connectToWiFi();
+void setCurrentTime(int hour, int minute);
 void setupLocalTime();
 
 void setup() {
@@ -123,6 +138,12 @@ void setup() {
   //     &Core1task,    // Task handle
   //     1);            // Core where the task should run
 
+  // setup EEPROM
+  EEPROM.begin(EEPROM_SIZE);
+  readLastDataFromEEPROM();
+  if (screenMode < 1 || screenMode > LAST_SCREEN) { screenMode = 1; };
+  if (BRIGHTNESS_DAY < 10 || BRIGHTNESS_DAY > 100) { BRIGHTNESS_DAY = 50; };
+
   // button setup
   pinMode(CHANGE_MODE, INPUT);  attachInterrupt(CHANGE_MODE, modeISR, RISING);
   pinMode(PREV_TRACK,  INPUT);  attachInterrupt(PREV_TRACK,  prevISR, RISING);
@@ -134,22 +155,27 @@ void setup() {
 
   // sd card setup
 
+
   // time setup
   timeTakenAt = millis(); //initial setup
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+  setCurrentTime(hour, minute); //initial time setup
 
   // bluetooth setup
+
+  // mqtt setup
+  
 
   // matrix setup --> do in Core #0
   matrix.begin();
   matrix.setTextWrap(false);
   matrix.setBrightness(BRIGHTNESS_DAY);
-
 }
 
 void Core0loopTask( void * parameter ) {
   //core 0 task is responsible for the screen and buttons
   while(true) {
+    setIntegerToEEPROM(0, screenMode);
     // =========== infinite loop for core #0 =========== //
     if (nightModeEnabled) 
       matrix.setBrightness(BRIGHTNESS_NIGHT);
@@ -194,61 +220,14 @@ void Core0loopTask( void * parameter ) {
         break;
     }
 
+    if (!firstScan) //this first scan property allows to utilize EEPROM without causing page fault
+      readLastDataFromEEPROM();
+
     // =========== infinite loop for core #0 =========== //
   }
 }
 
-/* LOOP 1 CORE TASK
-void Core1loopTask( void * parameter ) {
-  //core 1 task is responsible for the communication
-  // wi-fi setup
-  //while (WiFi.status() != WL_CONNECTED) { connectToWiFi(); }; //don't use, causes page fault due to multiple wi-fi interrupts
-  
-  while(true) {
-    // =========== infinite loop for core #1 =========== //
-    switch (screenMode) {
-      case 1:
-        //time screen
-        
-        break;
-      case 2:
-        // rainbow screen
-        WiFi.disconnect();
-        break;
-      case 3:
-        // message screen
-        
-        break;
-      case 4:
-        // weather screen
-        
-        break;
-      case 5:
-        // music screen
-        
-        break;
-      case 6:
-        // love you screen
-        
-        break;
-      case 7:
-        // synthwave screen
-        
-        break;
-      case 8:
-        // fire screen
-        
-        break;
-      case LAST_SCREEN:
-        
-        break;
-    }
-    
-    // =========== infinite loop for core #1 =========== //
-  }
-} // */
-
-void loop() {
+void loop() { //COMMUNICATION INTERFACE CONTROL ONLY
   while(true) {
     // =========== infinite loop for core #1 =========== //
     //Serial.println("loop() runs on: " + String(xPortGetCoreID()));
@@ -263,7 +242,7 @@ void loop() {
         break;
       case 3:
         // message screen
-        
+        while (WiFi.status() != WL_CONNECTED && screenMode == 3) { connectToWiFi(); };
         break;
       case 4:
         // weather screen
@@ -300,6 +279,37 @@ void loop() {
 }
 
 ////// SUPPORTING FUNCTIONALITY /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void readLastDataFromEEPROM() {
+  /*
+    byte 0 -> last screen used
+    byte 1 -> last screen brightness
+    byte 2..21 -> 20 chars for message
+    byte 22 -> byte for hour
+    byte 23 -> byte for minutes
+  */
+
+  screenMode = EEPROM.read(0);
+  BRIGHTNESS_DAY = EEPROM.read(1);
+
+  for (int byteNum = 0; byteNum < byteSizeForMessage; byteNum++) {
+    messageToClock[byteNum] = EEPROM.read(byteNum + 2);
+  }
+
+  hour = EEPROM.read(22);
+  minute = EEPROM.read(23);
+
+}
+
+void setIntegerToEEPROM(byte byte, int data) {
+  EEPROM.write(byte, data);
+  EEPROM.commit();
+}
+
+void setCharToEEPROM(byte byte, char data) {
+  EEPROM.write(byte, data);
+  EEPROM.commit();
+}
+
 //screen functions
 void timeScreen() {
   // time screen
@@ -310,6 +320,7 @@ void timeScreen() {
   while (WiFi.status() != WL_CONNECTED) { connectToWiFi(); };
 
   setupLocalTime();
+  firstScan = false; // this is where we start caring about the EEPROM to avoid pagefault
   timeTakenAt = millis();
   Serial.println("time taken");
   } else {
@@ -320,7 +331,13 @@ void timeScreen() {
 }
 
 void messageScreen() {
-  printText("msg", colors[0]);
+  //once connected start manipulation
+  while (screenMode == 3 && WiFi.status() == WL_CONNECTED) {
+    if (!mqttClient.connected())
+      reconnect(); //reconnect if not connected
+    
+    printText(String(messageToClock), colors[0]);
+  }
 }
 
 void musicScreen() {
@@ -363,6 +380,8 @@ void brightnessScreen() {
     drawVerticalBar(brightBar);
     matrix.setBrightness(BRIGHTNESS_DAY);
   }
+
+  setIntegerToEEPROM(1, BRIGHTNESS_DAY);
 
   screenMode = 1;
   clearMatrix();
@@ -410,6 +429,8 @@ void IRAM_ATTR prevISR() {
 
 void IRAM_ATTR playISR() {
   playMusic = !playMusic;
+
+  //if (screenMode == LAST_SCREEN) { setIntegerToEEPROM(1, BRIGHTNESS_DAY); };
 }
 
 void IRAM_ATTR nextISR() {
@@ -448,6 +469,18 @@ void connectToWiFi() {
   }
 }
 
+void setCurrentTime(int hour, int minute) {
+  if (hour < 10)
+    currentTime = "0" + String(hour) + ":";
+  else
+    currentTime = String(hour) + ":";
+
+  if (minute < 10)
+    currentTime = currentTime + "0" + String(minute);
+  else
+    currentTime = currentTime + String(minute);
+}
+
 void setupLocalTime(){
   struct tm timeinfo;
 
@@ -455,15 +488,13 @@ void setupLocalTime(){
     //waint until time is obtained
   } 
 
-  if (timeinfo.tm_hour < 10)
-    currentTime = "0" + String(timeinfo.tm_hour) + ":";
-  else
-    currentTime = String(timeinfo.tm_hour) + ":";
+  hour = timeinfo.tm_hour;
+  minute = timeinfo.tm_min;
 
-  if (timeinfo.tm_min < 10)
-    currentTime = currentTime + "0" + String(timeinfo.tm_min);
-  else
-    currentTime = currentTime + String(timeinfo.tm_min);
+  setCurrentTime(hour, minute);
+
+  setIntegerToEEPROM(22, hour);
+  setIntegerToEEPROM(23, minute);
 }
 
 void drawVerticalBar(int x) {
@@ -481,4 +512,37 @@ void clearMatrix() {
     matrix.setPixelColor(i, matrix.Color(0, 0, 0));
   }
   matrix.show();
+}
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Message:");
+  for(int i = 0; i < byteSizeForMessage; i++) {
+    messageToClock[i] = ' ';
+  }  
+
+  for (int i = 0; i < length && length < byteSizeForMessage; i++) {
+    Serial.print((char)payload[i]);
+    messageToClock[i] += (char)payload[i];
+    setCharToEEPROM(2 + i, (char)payload[i]);
+  }
+}
+
+void reconnect() {
+  Serial.println("Connecting to MQTT Broker...");
+  while (!mqttClient.connected()) {
+    Serial.println("Reconnecting to MQTT Broker..");
+
+    mqttClient.connect(clientId.c_str());
+  }
+
+  if (mqttClient.connect(clientId.c_str())) {
+    Serial.println("Connected!");
+    mqttClient.subscribe("/msg/toYuyu"); // subscribe to topic
+  }
+}
+
+void setupMQTT() {
+  mqttClient.setServer(mqttServer, mqttPort);
+  // set the callback function
+  mqttClient.setCallback(callback);
 }
