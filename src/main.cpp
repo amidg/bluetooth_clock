@@ -44,11 +44,12 @@ void readLastDataFromEEPROM();
 int firstScan = true; // property similar to PLC because this code is also some sort of a fake RTOS
 void setIntegerToEEPROM(byte byte, int data);
 void setCharToEEPROM(byte byte, char data);
+void setDefaultEEPROM(bool isResetRequired);
+#define HARD_RESET false //DO NOT SET TO TRUE UNLESS YOUR BLUETOOTH CLOCK STOPPED WORKING, THIS CLEARS YOUR SETTINGS AND STOPPS EEPROM FUNCTIONALITY
 
 // ================== LED MATRIX ================== //
 #define PIN 21 //led matrix pin
 int BRIGHTNESS_DAY = 50;
-#define BRIGHTNESS_NIGHT 20
 #define LAST_SCREEN 9
 bool nightModeEnabled = false;
 
@@ -82,6 +83,12 @@ void IRAM_ATTR modeISR();
 void IRAM_ATTR prevISR();
 void IRAM_ATTR playISR();
 void IRAM_ATTR nextISR();
+
+unsigned long timeBetweenModeClick = 0;
+unsigned long timeBetweenPrevClick = 0;
+unsigned long timeBetweenPlayClick = 0;
+unsigned long timeBetweenNextClick = 0;
+#define buttonTimeout 500 //500 ms
 
 void timeScreen();
 void messageScreen();
@@ -129,17 +136,14 @@ void setup() {
       &Core0task,    // Task handle
       0);            // Core where the task should run
 
-  // xTaskCreatePinnedToCore( //replaced by loop()
-  //     Core1loopTask, // Function to implement the task
-  //     "Core1",       // Name of the task
-  //     10000,         // Stack size in words
-  //     NULL,          // Task input parameter
-  //     1,             // Priority of the task
-  //     &Core1task,    // Task handle
-  //     1);            // Core where the task should run
+  timeBetweenModeClick = millis();
+  timeBetweenPrevClick = millis();
+  timeBetweenPlayClick = millis();
+  timeBetweenNextClick = millis();
 
   // setup EEPROM
   EEPROM.begin(EEPROM_SIZE);
+  setDefaultEEPROM(HARD_RESET);
   readLastDataFromEEPROM();
   if (screenMode < 1 || screenMode > LAST_SCREEN) { screenMode = 1; };
   if (BRIGHTNESS_DAY < 10 || BRIGHTNESS_DAY > 100) { BRIGHTNESS_DAY = 50; };
@@ -160,6 +164,7 @@ void setup() {
   timeTakenAt = millis(); //initial setup
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   setCurrentTime(hour, minute); //initial time setup
+  printText(currentTime, colors[0]);
 
   // bluetooth setup
 
@@ -175,11 +180,9 @@ void setup() {
 void Core0loopTask( void * parameter ) {
   //core 0 task is responsible for the screen and buttons
   while(true) {
+    if (screenMode < 1 || screenMode > LAST_SCREEN) { screenMode = 1; }; //mostly for debug, should not be needed because buttons have timeout
     setIntegerToEEPROM(0, screenMode);
     // =========== infinite loop for core #0 =========== //
-    if (nightModeEnabled) 
-      matrix.setBrightness(BRIGHTNESS_NIGHT);
-
     switch (screenMode) {
       case 1:
         //time screen
@@ -208,7 +211,6 @@ void Core0loopTask( void * parameter ) {
       case 7:
         // synthwave screen
         synthwaveScreen();
-        //zerotwoScreen();
         break;
       case 8:
         // fire screen
@@ -220,9 +222,7 @@ void Core0loopTask( void * parameter ) {
         break;
     }
 
-    if (!firstScan) //this first scan property allows to utilize EEPROM without causing page fault
-      readLastDataFromEEPROM();
-
+    delay(1); //needed to allow task watchdog timer to reset
     // =========== infinite loop for core #0 =========== //
   }
 }
@@ -234,7 +234,7 @@ void loop() { //COMMUNICATION INTERFACE CONTROL ONLY
     switch (screenMode) {
       case 1:
         //time screen
-        
+        //Serial.println(screenMode);
         break;
       case 2:
         // rainbow screen
@@ -265,7 +265,7 @@ void loop() { //COMMUNICATION INTERFACE CONTROL ONLY
         
         break;
       case LAST_SCREEN:
-        
+        WiFi.disconnect();
         break;
     }
 
@@ -279,6 +279,20 @@ void loop() { //COMMUNICATION INTERFACE CONTROL ONLY
 }
 
 ////// SUPPORTING FUNCTIONALITY /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void setDefaultEEPROM(bool isResetRequired) {
+  if (isResetRequired) {
+    setIntegerToEEPROM(0, 1);
+    setIntegerToEEPROM(1, 50);
+
+    for (int byteNum = 0; byteNum < byteSizeForMessage; byteNum++) {
+      setCharToEEPROM(byteNum + 2, ' ');
+    }
+
+    setIntegerToEEPROM(22, 1);
+    setIntegerToEEPROM(23, 4);
+  }
+}
+
 void readLastDataFromEEPROM() {
   /*
     byte 0 -> last screen used
@@ -313,8 +327,6 @@ void setCharToEEPROM(byte byte, char data) {
 //screen functions
 void timeScreen() {
   // time screen
-  printText(currentTime, colors[0]);
-
   if (millis() - timeTakenAt >= timeout) {
 
   while (WiFi.status() != WL_CONNECTED) { connectToWiFi(); };
@@ -323,6 +335,7 @@ void timeScreen() {
   firstScan = false; // this is where we start caring about the EEPROM to avoid pagefault
   timeTakenAt = millis();
   Serial.println("time taken");
+  printText(currentTime, colors[0]);
   } else {
     WiFi.disconnect();
     //Serial.println("core 0 task runs on: " + String(xPortGetCoreID()));
@@ -385,6 +398,7 @@ void brightnessScreen() {
 
   screenMode = 1;
   clearMatrix();
+  printText(currentTime, colors[0]);
 }
 
 // MATRIX LED
@@ -410,37 +424,50 @@ void printText(String text, uint16_t desiredColor) {
 void IRAM_ATTR modeISR() {
   prevScreen = screenMode;
 
-  screenMode++;
+  if (millis() - timeBetweenModeClick > buttonTimeout) {
+    screenMode++;
+    if (screenMode - prevScreen > 1) { screenMode = prevScreen + 1; };
+    timeBetweenModeClick = millis();
+  }
 
   if (screenMode > LAST_SCREEN)
     screenMode = 1;
 }
 
 void IRAM_ATTR prevISR() {
-  if (screenMode == LAST_SCREEN && BRIGHTNESS_DAY > 10) {
-    BRIGHTNESS_DAY -= 10;
-  } else {
-    musicTrackNum--;
+  if (millis() - timeBetweenPrevClick > buttonTimeout) {
+    timeBetweenPrevClick = millis();
+  
+    if (screenMode == LAST_SCREEN && BRIGHTNESS_DAY > 10) {
+      BRIGHTNESS_DAY -= 10;
+    } else {
+      musicTrackNum--;
 
-    if (musicTrackNum <= 0) 
-      musicTrackNum = 0;
-  }  
+      if (musicTrackNum <= 0) 
+        musicTrackNum = 0;
+    }  
+  }
 }
 
 void IRAM_ATTR playISR() {
-  playMusic = !playMusic;
-
-  //if (screenMode == LAST_SCREEN) { setIntegerToEEPROM(1, BRIGHTNESS_DAY); };
+  if (millis() - timeBetweenPlayClick > buttonTimeout) {
+    playMusic = !playMusic;
+    timeBetweenPlayClick = millis();
+  }
 }
 
 void IRAM_ATTR nextISR() {
-  if (screenMode == LAST_SCREEN && BRIGHTNESS_DAY < 100) {
-    BRIGHTNESS_DAY += 10;
-  } else {
-    musicTrackNum++;
+  if (millis() - timeBetweenNextClick > buttonTimeout) {
+    timeBetweenNextClick = millis();
 
-    if (musicTrackNum > 10) 
-      musicTrackNum = 10;
+    if (screenMode == LAST_SCREEN && BRIGHTNESS_DAY < 100) {
+      BRIGHTNESS_DAY += 10;
+    } else {
+      musicTrackNum++;
+
+      if (musicTrackNum > 10) 
+        musicTrackNum = 10;
+    }
   }
 }
 
@@ -485,7 +512,7 @@ void setupLocalTime(){
   struct tm timeinfo;
 
   while (!getLocalTime(&timeinfo)) {
-    //waint until time is obtained
+    Serial.println('.');
   } 
 
   hour = timeinfo.tm_hour;
