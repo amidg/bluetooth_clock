@@ -13,6 +13,7 @@
   execute in PlatformIO CLI (VIEW -> COMMAND PALLETE -> PLATFORM IO CLI)
   pio lib install "adafruit/Adafruit BusIO"
   pio lib install "knolleary/PubSubClient"
+  pio lib install "adafruit/Adafruit MQTT Library"
 
 */
 
@@ -100,8 +101,9 @@ void fireScreen();
 void brightnessScreen();
 void drawVerticalBar(int x);
 void clearMatrix();
-void setupMQTT();
-void reconnect();
+void connectToMQTT();
+
+Adafruit_MQTT_Subscribe *subscription;
 
 // ================== STEREO AUDIO SETUP ================== //
 
@@ -117,8 +119,11 @@ void Core1loopTask( void * parameter );
 
 // ================= DAY AND TIME ====================== //
 String currentTime = " ";
-unsigned long timeTakenAt = 0;
-unsigned long timeout = 60000; //1 minute
+uint timeTakenAt = 0;
+//unsigned long timeTakenAt = 0;
+uint currentCPUtime = 0;
+const int timeout = 60;
+//unsigned long timeout = 60000; //1 minute
 void connectToWiFi();
 void setCurrentTime(int hour, int minute);
 void setupLocalTime();
@@ -161,7 +166,8 @@ void setup() {
 
 
   // time setup
-  timeTakenAt = millis(); //initial setup
+  timeTakenAt = millis()/1000; //initial setup
+  currentCPUtime = millis()/1000;
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   setCurrentTime(hour, minute); //initial time setup
   printText(currentTime, colors[0]);
@@ -169,7 +175,7 @@ void setup() {
   // bluetooth setup
 
   // mqtt setup
-  
+  mqttTimeout = millis();
 
   // matrix setup --> do in Core #0
   matrix.begin();
@@ -180,8 +186,6 @@ void setup() {
 void Core0loopTask( void * parameter ) {
   //core 0 task is responsible for the screen and buttons
   while(true) {
-    if (screenMode < 1 || screenMode > LAST_SCREEN) { screenMode = 1; }; //mostly for debug, should not be needed because buttons have timeout
-    setIntegerToEEPROM(0, screenMode);
     // =========== infinite loop for core #0 =========== //
     switch (screenMode) {
       case 1:
@@ -194,7 +198,7 @@ void Core0loopTask( void * parameter ) {
         break;
       case 3:
         // message screen
-        messageScreen();
+        //messageScreen();
         break;
       case 4:
         // weather screen
@@ -242,7 +246,7 @@ void loop() { //COMMUNICATION INTERFACE CONTROL ONLY
         break;
       case 3:
         // message screen
-        while (WiFi.status() != WL_CONNECTED && screenMode == 3) { connectToWiFi(); };
+        
         break;
       case 4:
         // weather screen
@@ -302,12 +306,12 @@ void readLastDataFromEEPROM() {
     byte 23 -> byte for minutes
   */
 
-  screenMode = EEPROM.read(0);
+  //screenMode = EEPROM.read(0); //causes logic issues
   BRIGHTNESS_DAY = EEPROM.read(1);
 
-  for (int byteNum = 0; byteNum < byteSizeForMessage; byteNum++) {
-    messageToClock[byteNum] = EEPROM.read(byteNum + 2);
-  }
+  // for (int byteNum = 0; byteNum < byteSizeForMessage; byteNum++) {
+  //   messageToClock[byteNum] = EEPROM.read(byteNum + 2);
+  // }
 
   hour = EEPROM.read(22);
   minute = EEPROM.read(23);
@@ -327,31 +331,44 @@ void setCharToEEPROM(byte byte, char data) {
 //screen functions
 void timeScreen() {
   // time screen
-  if (millis() - timeTakenAt >= timeout) {
+  currentCPUtime = millis()/1000;
+  if (currentCPUtime - timeTakenAt >= timeout) {
 
-  while (WiFi.status() != WL_CONNECTED) { connectToWiFi(); };
+  while (WiFi.status() != WL_CONNECTED && screenMode == 1) { connectToWiFi(); };
 
   setupLocalTime();
   firstScan = false; // this is where we start caring about the EEPROM to avoid pagefault
-  timeTakenAt = millis();
+  timeTakenAt = millis()/1000;
   Serial.println("time taken");
   printText(currentTime, colors[0]);
   } else {
     WiFi.disconnect();
     //Serial.println("core 0 task runs on: " + String(xPortGetCoreID()));
-    Serial.println(millis() - timeTakenAt);
+    Serial.println(currentCPUtime - timeTakenAt);
+    //Serial.println(screenMode);
   }
 }
 
-void messageScreen() {
-  //once connected start manipulation
-  while (screenMode == 3 && WiFi.status() == WL_CONNECTED) {
-    if (!mqttClient.connected())
-      reconnect(); //reconnect if not connected
+// void messageScreen() {
+//   //once connected start manipulation
+//   printText("msg", colors[0]);
+//   Serial.println("message screen");
+//   while (WiFi.status() != WL_CONNECTED) {
+//     connectToWiFi();
+//   }
+
+//   while (screenMode == 3 && WiFi.status() == WL_CONNECTED) {
+//     while (!mqttClient.connected())
+//       connectToMQTT();
+
+//     if ( mqttClient.connected() ) {
+//       message = mqttClient.readSubscription(1000);
+//       messageToClock = (char *)message.lastread;
+//     }
     
-    printText(String(messageToClock), colors[0]);
-  }
-}
+//     printText(String(messageToClock), colors[0]);
+//   }
+// }
 
 void musicScreen() {
   printText("music", colors[0]);
@@ -403,8 +420,7 @@ void brightnessScreen() {
 
 // MATRIX LED
 void drawRainbow(int delayBetweenFrames) {
-  prevScreen = screenMode;
-  for(long firstPixelHue = 0; firstPixelHue < 5*65536 && prevScreen == screenMode; firstPixelHue += 256) {
+  for(long firstPixelHue = 0; firstPixelHue < 5*65536 && screenMode == 2; firstPixelHue += 256) {
     matrix.rainbow(firstPixelHue);
     matrix.show(); // Update strip with new contents
     delay(delayBetweenFrames);  // Pause for a moment
@@ -541,35 +557,25 @@ void clearMatrix() {
   matrix.show();
 }
 
-void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message:");
-  for(int i = 0; i < byteSizeForMessage; i++) {
-    messageToClock[i] = ' ';
-  }  
+// void connectToMQTT() {
+//   int8_t ret;
+//   uint8_t retries = 3;
 
-  for (int i = 0; i < length && length < byteSizeForMessage; i++) {
-    Serial.print((char)payload[i]);
-    messageToClock[i] += (char)payload[i];
-    setCharToEEPROM(2 + i, (char)payload[i]);
-  }
-}
+//   // Stop if already connected.
+//   if (mqttClient.connected()) {
+//     return;
+//   }
 
-void reconnect() {
-  Serial.println("Connecting to MQTT Broker...");
-  while (!mqttClient.connected()) {
-    Serial.println("Reconnecting to MQTT Broker..");
+//   Serial.print("Connecting to MQTT... ");
 
-    mqttClient.connect(clientId.c_str());
-  }
+//   while ((ret = mqttClient.connect()) != 0 && screenMode == 3 && retries > 0) { // connect will return 0 for connected
+//     if (millis() - mqttTimeout > 5000) {
+//       Serial.println(mqttClient.connectErrorString(ret));
+//       Serial.println("Retrying MQTT connection in 5 seconds...");
+//       mqttClient.disconnect();
+//       retries--;
+//     }
+//   }
 
-  if (mqttClient.connect(clientId.c_str())) {
-    Serial.println("Connected!");
-    mqttClient.subscribe("/msg/toYuyu"); // subscribe to topic
-  }
-}
-
-void setupMQTT() {
-  mqttClient.setServer(mqttServer, mqttPort);
-  // set the callback function
-  mqttClient.setCallback(callback);
-}
+//   Serial.println("MQTT Connected!");
+// }
