@@ -102,8 +102,7 @@ void brightnessScreen();
 void drawVerticalBar(int x);
 void clearMatrix();
 void connectToMQTT();
-
-Adafruit_MQTT_Subscribe *subscription;
+void receiveMessage(char *data, uint16_t length);
 
 // ================== STEREO AUDIO SETUP ================== //
 
@@ -175,7 +174,9 @@ void setup() {
   // bluetooth setup
 
   // mqtt setup
-  mqttTimeout = millis();
+  //message.setCallback(receiveMessage);
+  mqttClient.subscribe(&message);
+  
 
   // matrix setup --> do in Core #0
   matrix.begin();
@@ -198,7 +199,7 @@ void Core0loopTask( void * parameter ) {
         break;
       case 3:
         // message screen
-        //messageScreen();
+        messageScreen();
         break;
       case 4:
         // weather screen
@@ -349,26 +350,24 @@ void timeScreen() {
   }
 }
 
-// void messageScreen() {
-//   //once connected start manipulation
-//   printText("msg", colors[0]);
-//   Serial.println("message screen");
-//   while (WiFi.status() != WL_CONNECTED) {
-//     connectToWiFi();
-//   }
+void messageScreen() {
+  //once connected start manipulation
+  Serial.println("message screen");
+  while (WiFi.status() != WL_CONNECTED) {
+    // loop here until you connect to wifi
+    connectToWiFi();
+  }
 
-//   while (screenMode == 3 && WiFi.status() == WL_CONNECTED) {
-//     while (!mqttClient.connected())
-//       connectToMQTT();
+  connectToMQTT();
 
-//     if ( mqttClient.connected() ) {
-//       message = mqttClient.readSubscription(1000);
-//       messageToClock = (char *)message.lastread;
-//     }
+  while (screenMode == 3 && mqttClient.connected()) {
+    mqttClient.readSubscription(1000);
+    messageToClock = (char*)message.lastread;
     
-//     printText(String(messageToClock), colors[0]);
-//   }
-// }
+    Serial.println(messageToClock);
+    printText(String(messageToClock), colors[0]);
+  }
+}
 
 void musicScreen() {
   printText("music", colors[0]);
@@ -557,25 +556,31 @@ void clearMatrix() {
   matrix.show();
 }
 
-// void connectToMQTT() {
-//   int8_t ret;
-//   uint8_t retries = 3;
+void connectToMQTT() {
+  int8_t ret;
+  uint8_t retries = 3;
 
-//   // Stop if already connected.
-//   if (mqttClient.connected()) {
-//     return;
-//   }
+  // Stop if already connected.
+  if (mqttClient.connected()) {
+    return;
+  }
 
-//   Serial.print("Connecting to MQTT... ");
+  Serial.print("Connecting to MQTT... ");
 
-//   while ((ret = mqttClient.connect()) != 0 && screenMode == 3 && retries > 0) { // connect will return 0 for connected
-//     if (millis() - mqttTimeout > 5000) {
-//       Serial.println(mqttClient.connectErrorString(ret));
-//       Serial.println("Retrying MQTT connection in 5 seconds...");
-//       mqttClient.disconnect();
-//       retries--;
-//     }
-//   }
+  while ( (ret = mqttClient.connect()) != 0 && screenMode == 3 && retries > 0 ) { // connect will return 0 for connected
+    if (millis()/1000 - mqttTimeout > 5) {
+      Serial.println(mqttClient.connectErrorString(ret));
+      Serial.println("Retrying MQTT connection in 5 seconds...");
+      mqttClient.disconnect();
+      retries--;
+      mqttTimeout = millis()/1000;
+    }
+  }
 
-//   Serial.println("MQTT Connected!");
-// }
+  Serial.println("MQTT Connected!");
+}
+
+void receiveMessage(char *data, uint16_t length) {
+  Serial.println(data);
+  messageToClock = data;
+}

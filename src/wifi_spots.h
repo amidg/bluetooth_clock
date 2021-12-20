@@ -19,9 +19,9 @@ int minute = 4;
 WiFiClient wifiClient;
 Adafruit_MQTT_Client mqttClient(&wifiClient, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
 
-Adafruit_MQTT_Subscribe message = Adafruit_MQTT_Subscribe(&mqttClient, AIO_USERNAME "/msg/toYuyu");
+Adafruit_MQTT_Subscribe message = Adafruit_MQTT_Subscribe(&mqttClient, AIO_USERNAME "/feeds/messagetoyuyu");
 
-unsigned long mqttTimeout = 0;
+int mqttTimeout = 0; //5 seconds
 
 const int byteSizeForMessage = 20;
 const int byteSizeForScreen = 1;
@@ -29,8 +29,7 @@ const int byteSizeForBrightness = 1;
 const int byteSizeForHour = 1;
 const int byteSizeForMinute = 1;
 
-//char messageToClock[byteSizeForMessage] = "msg";
-String messageToClock = "msg";
+char *messageToClock = "msg";
 
 const int numberOfHotspots = 3;
 
