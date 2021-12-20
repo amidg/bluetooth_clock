@@ -12,8 +12,9 @@
   FOR SUCCESSFULL BUILD:
   execute in PlatformIO CLI (VIEW -> COMMAND PALLETE -> PLATFORM IO CLI)
   pio lib install "adafruit/Adafruit BusIO"
-  pio lib install "knolleary/PubSubClient"
   pio lib install "adafruit/Adafruit MQTT Library"
+  pio lib install "earlephilhower/ESP8266Audio"
+  platformio lib search "header:FS.h"
 
 */
 
@@ -27,6 +28,8 @@
 #include "wifi_spots.h"
 #include "images.h"
 #include <EEPROM.h>
+
+#include "music.h"
 
 // ================== MULTICORE OPERATION ================== //
 TaskHandle_t Core0task; //task to run on core #0
@@ -171,10 +174,10 @@ void setup() {
   printText(currentTime, colors[0]);
 
   // bluetooth setup
+  //a2dp_sink.start("LoveYuyu!");
 
   // mqtt setup
   mqttClient.subscribe(&message);
-  
 
   // matrix setup --> do in Core #0
   matrix.begin();
@@ -308,7 +311,7 @@ void readLastDataFromEEPROM() {
   //screenMode = EEPROM.read(0); //causes logic issues
   BRIGHTNESS_DAY = EEPROM.read(1);
 
-  // for (int byteNum = 0; byteNum < byteSizeForMessage; byteNum++) {
+  // for (int byteNum = 0; byteNum < (unsigned)strlen(messageToClock) && byteNum < byteSizeForMessage; byteNum++) {
   //   messageToClock[byteNum] = EEPROM.read(byteNum + 2);
   // }
 
@@ -350,7 +353,7 @@ void timeScreen() {
 
 void messageScreen() {
   //once connected start manipulation
-  Serial.println("message screen");
+  printText(messageToClock, colors[0]);
   while (WiFi.status() != WL_CONNECTED) {
     // loop here until you connect to wifi
     connectToWiFi();
@@ -369,6 +372,16 @@ void messageScreen() {
 
 void musicScreen() {
   printText("music", colors[0]);
+
+  // aac->begin(in, out);
+
+  // if (aac->isRunning()) {
+  //   aac->loop();
+  // } else {
+  //   aac -> stop();
+  //   Serial.printf("AAC done\n");
+  //   delay(1000);
+  // }
 }
 
 void weatherScreen() {
