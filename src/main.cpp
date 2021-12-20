@@ -102,7 +102,6 @@ void brightnessScreen();
 void drawVerticalBar(int x);
 void clearMatrix();
 void connectToMQTT();
-void receiveMessage(char *data, uint16_t length);
 
 // ================== STEREO AUDIO SETUP ================== //
 
@@ -174,7 +173,6 @@ void setup() {
   // bluetooth setup
 
   // mqtt setup
-  //message.setCallback(receiveMessage);
   mqttClient.subscribe(&message);
   
 
@@ -363,7 +361,7 @@ void messageScreen() {
   while (screenMode == 3 && mqttClient.connected()) {
     mqttClient.readSubscription(1000);
     messageToClock = (char*)message.lastread;
-    
+
     Serial.println(messageToClock);
     printText(String(messageToClock), colors[0]);
   }
@@ -429,8 +427,20 @@ void drawRainbow(int delayBetweenFrames) {
 void printText(String text, uint16_t desiredColor) {
   matrix.setTextColor(desiredColor);
   matrix.fillScreen(0);
-  matrix.setCursor(2, 0);
-  matrix.print(text);
+
+  if (text.length() < 6) {
+    matrix.setCursor(2, 0);
+    matrix.print(text);
+  } else {
+    for (int x = 2; x >= ( (-1)*matrix.width() - 20 ); x-- ) {
+      matrix.fillScreen(0);
+      matrix.setCursor(x, 0);
+      matrix.print(text);
+      matrix.show();
+      delay(100);
+    }
+  }
+  
   matrix.show();
   delay(100);
 }
@@ -578,9 +588,4 @@ void connectToMQTT() {
   }
 
   Serial.println("MQTT Connected!");
-}
-
-void receiveMessage(char *data, uint16_t length) {
-  Serial.println(data);
-  messageToClock = data;
 }
