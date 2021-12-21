@@ -160,11 +160,12 @@ void setup() {
   pinMode(PLAY_PAUSE,  INPUT);  attachInterrupt(PLAY_PAUSE,  playISR, RISING);
   pinMode(NEXT_TRACK,  INPUT);  attachInterrupt(NEXT_TRACK,  nextISR, RISING);
 
-  // audio setup
-
-
   // sd card setup
 
+
+  //bluetooth setup
+  a2dp_sink.set_bits_per_sample(32); 
+  a2dp_sink.start("LoveYuyu!");
 
   // time setup
   timeTakenAt = millis()/1000; //initial setup
@@ -172,9 +173,6 @@ void setup() {
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   setCurrentTime(hour, minute); //initial time setup
   printText(currentTime, colors[0]);
-
-  // bluetooth setup
-  //a2dp_sink.start("LoveYuyu!");
 
   // mqtt setup
   mqttClient.subscribe(&message);
@@ -255,8 +253,8 @@ void loop() { //COMMUNICATION INTERFACE CONTROL ONLY
         
         break;
       case 5:
-        // music screen
-        
+        // music screen = bluetooth speaker
+        WiFi.disconnect();
         break;
       case 6:
         // love you screen
