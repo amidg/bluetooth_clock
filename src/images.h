@@ -1,5 +1,31 @@
 #include "Arduino.h"
 
+#include "Adafruit-GFX-Library\Adafruit_GFX.h"
+#include "Adafruit_NeoMatrix\Adafruit_NeoMatrix.h"
+#include "Adafruit_NeoPixel\Adafruit_NeoPixel.h"
+
+#define PIN 21 //led matrix pin
+
+Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(32, 8, PIN,
+  NEO_MATRIX_BOTTOM  + NEO_MATRIX_RIGHT +
+  NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG,
+  NEO_GRB            + NEO_KHZ800);
+
+const int maxNumOfColors = 8;
+
+uint8_t randomGreen, randomRed, randomBlue;
+
+const uint16_t colors[maxNumOfColors] = {
+  matrix.Color(255, 0, 0), // green
+  matrix.Color(0, 255, 0), // red
+  matrix.Color(0, 0, 255), // blue
+  matrix.Color(36, 199, 177), // neon purple
+  matrix.Color(106, 253, 2), // orange tiger
+  matrix.Color(255, 255, 0), // yellow
+  matrix.Color(255, 0, 255), // cyan
+  matrix.Color(randomGreen, randomRed, randomBlue) // rand
+}; 
+
 struct pixel {
   int x;
   int y;

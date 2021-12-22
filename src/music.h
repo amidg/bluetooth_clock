@@ -3,4 +3,3 @@
 
 BluetoothA2DPSink a2dp_sink;
 
-

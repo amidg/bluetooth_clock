@@ -28,6 +28,7 @@ const int byteSizeForScreen = 1;
 const int byteSizeForBrightness = 1;
 const int byteSizeForHour = 1;
 const int byteSizeForMinute = 1;
+const int byteSizeForColors = 3;
 
 char *messageToClock = "msg";
 

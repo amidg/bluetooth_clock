@@ -21,10 +21,6 @@
 // LIBRARY
 #include <Arduino.h>
 
-#include "Adafruit-GFX-Library\Adafruit_GFX.h"
-#include "Adafruit_NeoMatrix\Adafruit_NeoMatrix.h"
-#include "Adafruit_NeoPixel\Adafruit_NeoPixel.h"
-
 #include "wifi_spots.h"
 #include "images.h"
 #include <EEPROM.h>
@@ -35,9 +31,9 @@
 TaskHandle_t Core0task; //task to run on core #0
 //TaskHandle_t Core1task; //task to run on core #1 --> replaced by loop()
 
-#define EEPROM_SIZE (byteSizeForMessage + byteSizeForScreen + byteSizeForBrightness + byteSizeForHour + byteSizeForMinute) // define the number of bytes you want to access
+#define EEPROM_SIZE (byteSizeForMessage + byteSizeForScreen + byteSizeForBrightness + byteSizeForHour + byteSizeForMinute + byteSizeForColors) // define the number of bytes you want to access
 /*
-  byte 1 -> last screen used
+  byte 1 -> fav color
   byte 2 -> last screen brightness
   byte 3..22 -> 20 chars for message
   byte 23 -> byte for hour
@@ -52,22 +48,17 @@ void setDefaultEEPROM(bool isResetRequired);
 #define HARD_RESET false //DO NOT SET TO TRUE UNLESS YOUR BLUETOOTH CLOCK STOPPED WORKING, THIS CLEARS YOUR SETTINGS AND STOPPS EEPROM FUNCTIONALITY
 
 // ================== LED MATRIX ================== //
-#define PIN 21 //led matrix pin
+int favoriteColorNum = 0;
+uint16_t favoriteColor = colors[favoriteColorNum];
+
 int BRIGHTNESS_DAY = 50;
 #define LAST_SCREEN 9
 bool nightModeEnabled = false;
 
-Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(32, 8, PIN,
-  NEO_MATRIX_BOTTOM  + NEO_MATRIX_RIGHT +
-  NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG,
-  NEO_GRB            + NEO_KHZ800);
-
-const uint16_t colors[] = {
-  matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(0, 0, 255) }; //green, red, blue
-
 int screenMode = 1; //1 default
 int prevScreen = screenMode;
 bool setupBrightness = false;
+bool setupColor = false;
 bool playMusic = true;
 bool next = false;
 bool prev = false;
@@ -101,7 +92,7 @@ void musicScreen();
 void weatherScreen();
 void loveYouScreen();
 void synthwaveScreen();
-void fireScreen();
+void changeFavoriteColorScreen();
 void brightnessScreen();
 void drawVerticalBar(int x);
 void clearMatrix();
@@ -166,14 +157,14 @@ void setup() {
 
   //bluetooth setup
   a2dp_sink.set_bits_per_sample(32); 
-  a2dp_sink.start("LoveYuyu!");
+  a2dp_sink.start("Love you Yuyu!");
 
   // time setup
   timeTakenAt = millis()/1000; //initial setup
   currentCPUtime = millis()/1000;
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   setCurrentTime(hour, minute); //initial time setup
-  printText(currentTime, colors[0]);
+  printText(currentTime, favoriteColor);
 
   // mqtt setup
   mqttClient.subscribe(&message);
@@ -218,8 +209,8 @@ void Core0loopTask( void * parameter ) {
         synthwaveScreen();
         break;
       case 8:
-        // fire screen
-        fireScreen();
+        // color screen
+        changeFavoriteColorScreen();
         break;
       case LAST_SCREEN:
         // brightness screen
@@ -268,8 +259,8 @@ void loop() { //COMMUNICATION INTERFACE CONTROL ONLY
         
         break;
       case 8:
-        // fire screen
-        
+        // color screen
+        WiFi.disconnect();        
         break;
       case LAST_SCREEN:
         WiFi.disconnect();
@@ -288,7 +279,7 @@ void loop() { //COMMUNICATION INTERFACE CONTROL ONLY
 ////// SUPPORTING FUNCTIONALITY /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void setDefaultEEPROM(bool isResetRequired) {
   if (isResetRequired) {
-    setIntegerToEEPROM(0, 1);
+    setIntegerToEEPROM(0, 0);
     setIntegerToEEPROM(1, 50);
 
     for (int byteNum = 0; byteNum < byteSizeForMessage; byteNum++) {
@@ -302,14 +293,14 @@ void setDefaultEEPROM(bool isResetRequired) {
 
 void readLastDataFromEEPROM() {
   /*
-    byte 0 -> last screen used
+    byte 0 -> fav color
     byte 1 -> last screen brightness
     byte 2..21 -> 20 chars for message
     byte 22 -> byte for hour
     byte 23 -> byte for minutes
   */
 
-  //screenMode = EEPROM.read(0); //causes logic issues
+  favoriteColorNum = EEPROM.read(0); // read last favorite color
   BRIGHTNESS_DAY = EEPROM.read(1);
 
   // for (int byteNum = 0; byteNum < (unsigned)strlen(messageToClock) && byteNum < byteSizeForMessage; byteNum++) {
@@ -318,6 +309,10 @@ void readLastDataFromEEPROM() {
 
   hour = EEPROM.read(22);
   minute = EEPROM.read(23);
+
+  randomGreen = EEPROM.read(24); // to do: rework this
+  randomRed = EEPROM.read(25);
+  randomBlue = EEPROM.read(26);
 
 }
 
@@ -343,7 +338,7 @@ void timeScreen() {
   firstScan = false; // this is where we start caring about the EEPROM to avoid pagefault
   timeTakenAt = millis()/1000;
   Serial.println("time taken");
-  printText(currentTime, colors[0]);
+  printText(currentTime, favoriteColor);
   } else {
     WiFi.disconnect();
     //Serial.println("core 0 task runs on: " + String(xPortGetCoreID()));
@@ -354,8 +349,8 @@ void timeScreen() {
 
 void messageScreen() {
   //once connected start manipulation
-  printText(messageToClock, colors[0]);
-  while (WiFi.status() != WL_CONNECTED) {
+  printText(messageToClock, favoriteColor);
+  while (WiFi.status() != WL_CONNECTED && screenMode == 3) {
     // loop here until you connect to wifi
     connectToWiFi();
   }
@@ -367,12 +362,12 @@ void messageScreen() {
     messageToClock = (char*)message.lastread;
 
     Serial.println(messageToClock);
-    printText(String(messageToClock), colors[0]);
+    printText(String(messageToClock), favoriteColor);
   }
 }
 
 void musicScreen() {
-  printText("music", colors[0]);
+  printText("music", favoriteColor);
 
   // aac->begin(in, out);
 
@@ -386,11 +381,11 @@ void musicScreen() {
 }
 
 void weatherScreen() {
-  printText("rain", colors[0]);
+  printText("rain", favoriteColor);
 } 
 
 void loveYouScreen() {
-  printText("love", colors[0]);
+  printText("love", favoriteColor);
 }
 
 void synthwaveScreen() {
@@ -406,9 +401,31 @@ void synthwaveScreen() {
   }
 }
 
-void fireScreen() {
-  // work in progress
-  printText("fire", colors[0]);
+void changeFavoriteColorScreen() {
+  bool randomColorSet = false;
+
+  clearMatrix();
+  while(!setupColor) {
+    if (favoriteColorNum == maxNumOfColors - 1 && !randomColorSet) {
+      randomGreen = random(10, 255); setIntegerToEEPROM(24, randomGreen);
+      randomRed = random(10, 255);   setIntegerToEEPROM(25, randomRed);
+      randomBlue = random(10, 255);  setIntegerToEEPROM(26, randomBlue);
+      randomColorSet = !randomColorSet;
+    } else if (favoriteColorNum != maxNumOfColors - 1) {
+      randomColorSet = false;
+    }
+
+    favoriteColor = colors[favoriteColorNum];
+
+    Serial.println(favoriteColorNum);
+    matrix.fill(favoriteColor);
+    matrix.show();
+  }
+
+  setIntegerToEEPROM(0, favoriteColorNum);
+
+  screenMode = LAST_SCREEN;
+  clearMatrix();
 }
 
 void brightnessScreen() {
@@ -425,7 +442,7 @@ void brightnessScreen() {
 
   screenMode = 1;
   clearMatrix();
-  printText(currentTime, colors[0]);
+  printText(currentTime, favoriteColor);
 }
 
 // MATRIX LED
@@ -478,6 +495,8 @@ void IRAM_ATTR prevISR() {
   
     if (screenMode == LAST_SCREEN && BRIGHTNESS_DAY > 10) {
       BRIGHTNESS_DAY -= 10;
+    } else if (screenMode == 8 && favoriteColorNum >= 0) {
+      favoriteColorNum--;
     } else {
       musicTrackNum--;
       a2dp_sink.previous();
@@ -493,6 +512,8 @@ void IRAM_ATTR playISR() {
 
     if (screenMode == LAST_SCREEN && BRIGHTNESS_DAY > 10) {
       setupBrightness = !setupBrightness; //should execute as true
+    } else if (screenMode == 8) {
+      setupColor = !setupColor;
     } else {
       playMusic = !playMusic;
 
@@ -512,6 +533,8 @@ void IRAM_ATTR nextISR() {
 
     if (screenMode == LAST_SCREEN && BRIGHTNESS_DAY < 100) {
       BRIGHTNESS_DAY += 10;
+    } else if (screenMode == 8 && favoriteColorNum < maxNumOfColors) {
+      favoriteColorNum++;
     } else {
       musicTrackNum++;
       a2dp_sink.next();
@@ -578,7 +601,7 @@ void setupLocalTime(){
 void drawVerticalBar(int x) {
   for (int currentBar = 0; currentBar <= x; currentBar++) {
     for (int y = 0; y < 8; y++) {
-      matrix.writePixel(currentBar, y, colors[0]);
+      matrix.writePixel(currentBar, y, favoriteColor);
     }
   }
   
