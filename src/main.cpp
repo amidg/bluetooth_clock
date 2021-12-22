@@ -67,7 +67,8 @@ const uint16_t colors[] = {
 
 int screenMode = 1; //1 default
 int prevScreen = screenMode;
-bool playMusic = false;
+bool setupBrightness = false;
+bool playMusic = true;
 bool next = false;
 bool prev = false;
 
@@ -235,6 +236,8 @@ void loop() { //COMMUNICATION INTERFACE CONTROL ONLY
   while(true) {
     // =========== infinite loop for core #1 =========== //
     //Serial.println("loop() runs on: " + String(xPortGetCoreID()));
+
+    //switch case
     switch (screenMode) {
       case 1:
         //time screen
@@ -411,8 +414,7 @@ void fireScreen() {
 void brightnessScreen() {
   int brightBar = 0;
 
-  playMusic = false;
-  while(!playMusic) {
+  while(!setupBrightness) {
     clearMatrix();
     brightBar = 3*BRIGHTNESS_DAY/10;
     drawVerticalBar(brightBar);
@@ -478,6 +480,7 @@ void IRAM_ATTR prevISR() {
       BRIGHTNESS_DAY -= 10;
     } else {
       musicTrackNum--;
+      a2dp_sink.previous();
 
       if (musicTrackNum <= 0) 
         musicTrackNum = 0;
@@ -487,7 +490,18 @@ void IRAM_ATTR prevISR() {
 
 void IRAM_ATTR playISR() {
   if (millis() - timeBetweenPlayClick > buttonTimeout) {
-    playMusic = !playMusic;
+
+    if (screenMode == LAST_SCREEN && BRIGHTNESS_DAY > 10) {
+      setupBrightness = !setupBrightness; //should execute as true
+    } else {
+      playMusic = !playMusic;
+
+      if (playMusic)
+        a2dp_sink.play();
+      else 
+        a2dp_sink.pause();
+    }  
+    
     timeBetweenPlayClick = millis();
   }
 }
@@ -500,6 +514,7 @@ void IRAM_ATTR nextISR() {
       BRIGHTNESS_DAY += 10;
     } else {
       musicTrackNum++;
+      a2dp_sink.next();
 
       if (musicTrackNum > 10) 
         musicTrackNum = 10;
