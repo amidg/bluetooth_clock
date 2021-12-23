@@ -51,7 +51,7 @@ void setDefaultEEPROM(bool isResetRequired);
 int favoriteColorNum = 0;
 uint16_t favoriteColor = colors[favoriteColorNum];
 
-int BRIGHTNESS_DAY = 50;
+int BRIGHTNESS_DAY = 20;
 #define LAST_SCREEN 9
 bool nightModeEnabled = false;
 
@@ -172,12 +172,14 @@ void setup() {
   // matrix setup --> do in Core #0
   matrix.begin();
   matrix.setTextWrap(false);
-  matrix.setBrightness(BRIGHTNESS_DAY);
+  matrix.setBrightness(EEPROM.read(2));
+  favoriteColor = colors[EEPROM.read(1)];
 }
 
 void Core0loopTask( void * parameter ) {
   //core 0 task is responsible for the screen and buttons
   while(true) {
+    //Serial.println(screenMode);
     // =========== infinite loop for core #0 =========== //
     switch (screenMode) {
       case 1:
@@ -404,6 +406,9 @@ void synthwaveScreen() {
 void changeFavoriteColorScreen() {
   bool randomColorSet = false;
 
+  Serial.println("color screen");
+
+  setupColor = false;
   clearMatrix();
   while(!setupColor) {
     if (favoriteColorNum == maxNumOfColors - 1 && !randomColorSet) {
@@ -415,10 +420,16 @@ void changeFavoriteColorScreen() {
       randomColorSet = false;
     }
 
+    if (favoriteColorNum < 0) {favoriteColorNum = 0; };
+    if (favoriteColorNum > maxNumOfColors) {favoriteColorNum = maxNumOfColors - 1; };
+
     favoriteColor = colors[favoriteColorNum];
 
     Serial.println(favoriteColorNum);
-    matrix.fill(favoriteColor);
+    
+    for (int i = 0; i < 256; i++) 
+      matrix.setPixelColor(i, favoriteColor);
+
     matrix.show();
   }
 
@@ -426,11 +437,15 @@ void changeFavoriteColorScreen() {
 
   screenMode = LAST_SCREEN;
   clearMatrix();
+  delay(500);
 }
 
 void brightnessScreen() {
   int brightBar = 0;
 
+  Serial.println("brightness screen");
+
+  setupBrightness = false;
   while(!setupBrightness) {
     clearMatrix();
     brightBar = 3*BRIGHTNESS_DAY/10;
@@ -443,6 +458,7 @@ void brightnessScreen() {
   screenMode = 1;
   clearMatrix();
   printText(currentTime, favoriteColor);
+  delay(500);
 }
 
 // MATRIX LED
@@ -510,10 +526,12 @@ void IRAM_ATTR prevISR() {
 void IRAM_ATTR playISR() {
   if (millis() - timeBetweenPlayClick > buttonTimeout) {
 
-    if (screenMode == LAST_SCREEN && BRIGHTNESS_DAY > 10) {
-      setupBrightness = !setupBrightness; //should execute as true
+    if (screenMode == LAST_SCREEN && BRIGHTNESS_DAY >= 10) {
+      setupBrightness = true; //should execute as true
+      screenMode = 1;
     } else if (screenMode == 8) {
-      setupColor = !setupColor;
+      setupColor = true;
+      screenMode = 8;
     } else {
       playMusic = !playMusic;
 

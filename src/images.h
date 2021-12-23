@@ -11,13 +11,24 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(32, 8, PIN,
   NEO_MATRIX_COLUMNS + NEO_MATRIX_ZIGZAG,
   NEO_GRB            + NEO_KHZ800);
 
+// enum colorNames {
+//  red = 0, 
+//  green = 1, 
+//  blue = 2, 
+//  neon_purple = 3, 
+//  orange_tiger = 4, 
+//  yellow = 5, 
+//  cyan = 6, 
+//  random = 7
+// };
+
 const int maxNumOfColors = 8;
 
 uint8_t randomGreen, randomRed, randomBlue;
 
 const uint16_t colors[maxNumOfColors] = {
-  matrix.Color(255, 0, 0), // green
-  matrix.Color(0, 255, 0), // red
+  matrix.Color(255, 0, 0), // red
+  matrix.Color(0, 255, 0), // green
   matrix.Color(0, 0, 255), // blue
   matrix.Color(36, 199, 177), // neon purple
   matrix.Color(106, 253, 2), // orange tiger
