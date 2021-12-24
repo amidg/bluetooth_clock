@@ -565,8 +565,8 @@ void IRAM_ATTR nextISR() {
 
 void connectToWiFi() {
   //connect to one of the Wi-Fi
-  unsigned int timeoutWiFi = 5000;
-  unsigned long connectionTime = millis();
+  int timeoutWiFi = 5;
+  int connectionTime;
 
   for (int i = 0; i < numberOfHotspots && WiFi.status() != WL_CONNECTED; i++) {
     //try one of the wi-fi hotspots
@@ -574,8 +574,10 @@ void connectToWiFi() {
       Serial.println(ssid[i]);
       WiFi.begin(ssid[i], password[i]);
 
-      while (WiFi.status() != WL_CONNECTED && (millis() - connectionTime < timeoutWiFi) ) {
-        Serial.print(".");
+      connectionTime = millis()/1000;
+
+      while (WiFi.status() != WL_CONNECTED && (millis()/1000 - connectionTime < timeoutWiFi) ) {
+        Serial.print("." + String() + ".");
       }
 
       if (WiFi.status() == WL_CONNECTED) {
@@ -585,6 +587,8 @@ void connectToWiFi() {
       }
 
       if (i == numberOfHotspots && WiFi.status() != WL_CONNECTED) { i = 0; };
+
+      delay(10);
   }
 }
 

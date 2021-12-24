@@ -34,12 +34,12 @@ char *messageToClock = "msg";
 
 const int numberOfHotspots = 3;
 
-const char *ssid[numberOfHotspots] = { "TorontoDungeon", 
-                                       "TakeItBoy",
-                                       "yuyu" 
+const char *ssid[numberOfHotspots] = { "TELUS0903", 
+                                       "TorontoDungeon", 
+                                       "TakeItBoy"
                                      };
 
-const char *password[numberOfHotspots] = { "Thankyousir228!", 
-                                           "Thankyousir228!",
-                                           "yuyu" 
+const char *password[numberOfHotspots] = { "fn3vd9kwqx",
+                                           "Thankyousir228!", 
+                                           "Thankyousir228!"
                                          };
