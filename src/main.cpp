@@ -178,6 +178,7 @@ void setup() {
 
 void Core0loopTask( void * parameter ) {
   //core 0 task is responsible for the screen and buttons
+  
   while(true) {
     //Serial.println(screenMode);
     // =========== infinite loop for core #0 =========== //
@@ -334,13 +335,16 @@ void timeScreen() {
   currentCPUtime = millis()/1000;
   if (currentCPUtime - timeTakenAt >= timeout) {
 
-  while (WiFi.status() != WL_CONNECTED && screenMode == 1) { connectToWiFi(); };
+    if (WiFi.status() != WL_CONNECTED) {
+      connectToWiFi();
+    } else if (WiFi.status() == WL_CONNECTED) {
+      setupLocalTime();
+      firstScan = false; // this is where we start caring about the EEPROM to avoid pagefault
+      timeTakenAt = millis()/1000;
+      Serial.println("time taken");
+    }
 
-  setupLocalTime();
-  firstScan = false; // this is where we start caring about the EEPROM to avoid pagefault
-  timeTakenAt = millis()/1000;
-  Serial.println("time taken");
-  printText(currentTime, favoriteColor);
+    printText(currentTime, favoriteColor);
   } else {
     WiFi.disconnect();
     //Serial.println("core 0 task runs on: " + String(xPortGetCoreID()));
