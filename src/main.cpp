@@ -13,8 +13,9 @@
   execute in PlatformIO CLI (VIEW -> COMMAND PALLETE -> PLATFORM IO CLI)
   pio lib install "adafruit/Adafruit BusIO"
   pio lib install "adafruit/Adafruit MQTT Library"
-  pio lib install "earlephilhower/ESP8266Audio"
-  platformio lib search "header:FS.h"
+
+  For Linux Upload/monitor:
+  sudo chmod a+rw /dev/ttyUSBx where x -> your device number
 
 */
 
