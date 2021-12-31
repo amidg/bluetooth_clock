@@ -1,8 +1,12 @@
 #include "Arduino.h"
 
-#include "Adafruit-GFX-Library\Adafruit_GFX.h"
-#include "Adafruit_NeoMatrix\Adafruit_NeoMatrix.h"
-#include "Adafruit_NeoPixel\Adafruit_NeoPixel.h"
+#include "./Adafruit_GFX.h"
+#include "./Adafruit_NeoMatrix.h"
+#include "./Adafruit_NeoPixel.h"
+
+// #include ".\Adafruit-GFX-Library\Adafruit_GFX.h"
+// #include ".\Adafruit_NeoMatrix\Adafruit_NeoMatrix.h"
+// #include ".\Adafruit_NeoPixel\Adafruit_NeoPixel.h"
 
 #define PIN 21 //led matrix pin
 
