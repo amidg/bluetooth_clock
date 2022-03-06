@@ -19,4 +19,4 @@ PCB Revision 1 \
 ![pcbrev1](/images/pcb_rev_1.png?raw=true "PCB Revision 1")
 
 Mechanical enclosure front \
-![fullbody](/images/bluetooth_clock.jpg?raw=true "Mechanical enclosure front")
+![fullbody](/images/bluetooth_speaker.jpg?raw=true "Mechanical enclosure front")
