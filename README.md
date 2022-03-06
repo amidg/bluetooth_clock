@@ -16,7 +16,7 @@ Bluetooth Clock based on ESP32-WROOM-32D (16MB) microcontroller.\
 
 # Renders:
 PCB Revision 1
-![pcbrev1](./images/pcb_rev1.jpeg)
+![pcbrev1](/images/pcb_rev1.jpeg)
 
 Mechanical enclosure front
-![fullbody](./images/bluetooth_clock.jpeg)
+![fullbody](/images/bluetooth_clock.jpeg)
