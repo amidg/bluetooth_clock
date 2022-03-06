@@ -15,8 +15,8 @@ Bluetooth Clock based on ESP32-WROOM-32D (16MB) microcontroller.\
 * Mechanical -> SolidWorks 2020 compatible model + 3d printer ready STLs
 
 # Renders:
-PCB Revision 1
-![pcbrev1](/images/pcb_rev1.jpeg)
+PCB Revision 1 \
+![pcbrev1](pcb_rev1.jpeg)
 
-Mechanical enclosure front
-![fullbody](/images/bluetooth_clock.jpeg)
+Mechanical enclosure front \
+![fullbody](bluetooth_clock.jpeg)
