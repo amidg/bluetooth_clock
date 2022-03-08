@@ -1,0 +1,19 @@
+Removed Pin From Net: NetName=+3V3 Pin=C16-1
+Removed Pin From Net: NetName=GND Pin=C16-2
+Removed Pin From Net: NetName=SDCARD_CS Pin=R20-2
+Removed Pin From Net: NetName=+3V3 Pin=U5-1
+Removed Pin From Net: NetName=SDCARD_CLK Pin=U5-2
+Removed Pin From Net: NetName=GPIO18 / VSPI_SCK Pin=U5-3
+Removed Pin From Net: NetName=SDCARD_DI Pin=U5-4
+Removed Pin From Net: NetName=GPIO23 / VSPI_MOSI Pin=U5-5
+Removed Pin From Net: NetName=SDCARD_CS Pin=U5-6
+Removed Pin From Net: NetName=GPIO5 / VSPI_CS Pin=U5-7
+Removed Pin From Net: NetName=GND Pin=U5-8
+Removed Pin From Net: NetName=GPIO18 / VSPI_SCK Pin=U5-9
+Removed Pin From Net: NetName=GND Pin=U5-11
+Removed Pin From Net: NetName=GND Pin=U5-14
+Removed Member From Class: ClassName=sd_card Member=C16
+Removed Member From Class: ClassName=sd_card Member=R20
+Removed Member From Class: ClassName=sd_card Member=sdcard
+Removed Member From Class: ClassName=sd_card Member=U5
+Added Pin To Net: NetName=+5_USB_IN Pin=C1-1

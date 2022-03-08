@@ -1,0 +1,9 @@
+Added Component: Designator=R20(RESC2013X70X40ML20T20)
+Add component (AddParameter): Name = "Manufacturer"; Value = "Panasonic"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Part Number"; Value = "ERJ-6ENF1003V"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=GPIO5 / VSPI_CS Pin=microSD-2
+Added Pin To Net: NetName=GPIO23 / VSPI_MOSI Pin=microSD-3
+Added Pin To Net: NetName=GPIO18 / VSPI_SCK Pin=microSD-5
+Added Pin To Net: NetName=GPIO5 / VSPI_CS Pin=R20-1
+Added Pin To Net: NetName=+3V3 Pin=R20-2
+Added Member To Class: ClassName=sd_card Member=Component R20 100K 5% 0805
